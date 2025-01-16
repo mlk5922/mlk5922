@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Vérification de l'e-mail</h2>
+<!-- Formulaire de vérification -->
+<form method="post">
+    {% csrf_token %}  <!-- Protection contre les attaques CSRF -->
+    <label for="email">E-mail :</label>
+    <input type="email" name="email" required>  <!-- Champ pour l'e-mail -->
+    <br>
+    <label for="code">Code de validation :</label>
+    <input type="text" name="code" required>  <!-- Champ pour le code de validation -->
+    <br>
+    <button type="submit">Vérifier</button>  <!-- Bouton de soumission -->
+</form>
+{% endblock %}

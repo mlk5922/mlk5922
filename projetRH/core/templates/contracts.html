@@ -1,0 +1,34 @@
+<!-- templates/contracts.html -->
+{% extends 'base.html' %} 
+{% load static %}
+
+
+{% block content %}
+<h1>Liste des Contrats</h1>
+<a href="{% url 'add_contract' %}" class="btn btn-primary mb-3">Ajouter un Contrat</a>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Employé</th>
+            <th>Type</th>
+            <th>Date de Début</th>
+            <th>Date de Fin</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for contract in contracts %}
+        <tr>
+            <td>{{ contract.employee }}</td>
+            <td>{{ contract.type }}</td>
+            <td>{{ contract.start_date }}</td>
+            <td>{{ contract.end_date }}</td>
+            <td>
+                <a href="{% url 'edit_contract' contract.id %}" class="btn btn-warning btn-sm">Modifier</a>
+                <a href="{% url 'delete_contract' contract.id %}" class="btn btn-danger btn-sm">Supprimer</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,11 @@
+<!-- core/templates/post_job.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Poster une nouvelle offre d'emploi</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success">Poster</button>
+</form>
+{% endblock %}

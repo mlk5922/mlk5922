@@ -1,0 +1,105 @@
+<!-- core/templates/customize_favorites.html -->
+{% extends 'base.html' %}
+{% load custom_filters %}  <!-- Charger le filtre personnalisé -->
+
+{% block content %}
+<div class="container">
+    <h1 class="my-4">Personnaliser vos favoris</h1>
+    
+    <!-- Formulaire pour personnaliser les favoris -->
+    <form method="post">
+        {% csrf_token %}
+        <div id="favorites-list" class="list-group">
+            {% for module in available_modules %}
+            <div class="favorite-item list-group-item d-flex justify-content-between align-items-center" draggable="true">
+                <!-- Case à cocher pour sélectionner le favori -->
+                <div>
+                    <input type="checkbox" name="favorites" value="{{ module.name }}" id="{{ module.name }}" 
+                           {% if module.name in user_favorites_names %}checked{% endif %}>
+                    <label for="{{ module.name }}" class="ms-2">{{ module.name }}</label>
+                </div>
+
+                <!-- Champ pour définir l'ordre -->
+                <input type="number" name="order" value="{% if module.name in user_favorites_names %}{{ user_favorites_dict|get_item:module.name }}{% else %}0{% endif %}" 
+                       min="0" class="order-input form-control" style="width: 80px;">
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Bouton pour enregistrer les modifications -->
+        <button type="submit" class="btn btn-primary mt-3">
+            <i class="fas fa-save"></i> Enregistrer
+        </button>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .favorite-item {
+        cursor: grab;
+        transition: background-color 0.3s ease;
+    }
+    .favorite-item:hover {
+        background-color: #f8f9fa;
+    }
+    .favorite-item.dragging {
+        opacity: 0.5;
+    }
+    .order-input {
+        text-align: center;
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const favoritesList = document.getElementById('favorites-list');
+        let draggedItem = null;
+
+        // Gestion du glisser-déposer
+        favoritesList.addEventListener('dragstart', function (e) {
+            draggedItem = e.target;
+            e.target.classList.add('dragging');
+        });
+
+        favoritesList.addEventListener('dragend', function (e) {
+            e.target.classList.remove('dragging');
+        });
+
+        favoritesList.addEventListener('dragover', function (e) {
+            e.preventDefault();
+            const afterElement = getDragAfterElement(favoritesList, e.clientY);
+            if (afterElement == null) {
+                favoritesList.appendChild(draggedItem);
+            } else {
+                favoritesList.insertBefore(draggedItem, afterElement);
+            }
+        });
+
+        // Fonction pour déterminer la position de l'élément après le glisser-déposer
+        function getDragAfterElement(container, y) {
+            const draggableElements = [...container.querySelectorAll('.favorite-item:not(.dragging)')];
+            return draggableElements.reduce((closest, child) => {
+                const box = child.getBoundingClientRect();
+                const offset = y - box.top - box.height / 2;
+                if (offset < 0 && offset > closest.offset) {
+                    return { offset: offset, element: child };
+                } else {
+                    return closest;
+                }
+            }, { offset: Number.NEGATIVE_INFINITY }).element;
+        }
+
+        // Mise à jour automatique des numéros d'ordre après le glisser-déposer
+        favoritesList.addEventListener('dragend', function () {
+            const items = favoritesList.querySelectorAll('.favorite-item');
+            items.forEach((item, index) => {
+                const orderInput = item.querySelector('.order-input');
+                orderInput.value = index + 1;
+            });
+        });
+    });
+</script>
+{% endblock %}

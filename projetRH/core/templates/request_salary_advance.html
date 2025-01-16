@@ -1,0 +1,14 @@
+<!-- core/templates/request_salary_advance.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Demander une avance sur salaire</h1>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Envoyer la demande</button>
+</form>
+
+<a href="{% url 'manage_salaries' %}" class="btn btn-secondary">Retour</a>
+{% endblock %}

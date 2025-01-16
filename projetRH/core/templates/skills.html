@@ -1,0 +1,24 @@
+<!--core/templates/ skills.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Liste des Compétences</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nom</th>
+            <th>Catégorie</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for skill in skills %}
+        <tr>
+            <td>{{ skill.name }}</td>
+            <td>{{ skill.category }}</td>
+            <td>{{ skill.description }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

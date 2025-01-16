@@ -1,0 +1,15 @@
+<!-- core/templates/carry_over_leave.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<h1>Cumuler les congés en fin d'année</h1>
+<p>Cette action va cumuler les congés non utilisés de l'année en cours pour chaque employé.</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-primary">Cumuler les congés</button>
+</form>
+
+<a href="{% url 'manage_dashboard' %}" class="btn btn-secondary">Retour</a>
+{% endblock %}

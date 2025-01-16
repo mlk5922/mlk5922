@@ -1,0 +1,12 @@
+<!-- templates/grant_permissions.html -->
+
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Accorder des Permissions</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success">Enregistrer</button>
+</form>
+{% endblock %}

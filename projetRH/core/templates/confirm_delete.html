@@ -1,0 +1,14 @@
+<!-- templates/confirm_delete.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Supprimer le Salaire</h1>
+
+<p>Êtes-vous sûr de vouloir supprimer le salaire de {{ salary.employee }} pour {{ salary.month }}/{{ salary.year }} ?</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Oui, supprimer</button>
+    <a href="{% url 'manage_salaries' %}" class="btn btn-secondary">Annuler</a>
+</form>
+{% endblock %}

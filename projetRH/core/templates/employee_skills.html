@@ -1,0 +1,25 @@
+<!-- templates/employee-skills.html -->
+
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Compétences des Employés</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Employé</th>
+            <th>Compétence</th>
+            <th>Niveau</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for employee_skill in employee_skills %}
+        <tr>
+            <td>{{ employee_skill.employee }}</td>
+            <td>{{ employee_skill.skill }}</td>
+            <td>{{ employee_skill.level }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

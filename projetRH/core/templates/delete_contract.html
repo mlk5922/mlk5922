@@ -1,0 +1,14 @@
+<!-- templates/delete_contract.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block content %}
+<h1>Supprimer le Contrat</h1>
+<p>Êtes-vous sûr de vouloir supprimer ce contrat ?</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Supprimer</button>
+    <a href="{% url 'manage_contracts' %}" class="btn btn-secondary">Annuler</a>
+</form>
+{% endblock %}

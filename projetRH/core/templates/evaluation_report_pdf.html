@@ -1,0 +1,32 @@
+<!-- evaluation_report_pdf.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Rapport d'Évaluation</title>
+</head>
+<body>
+    <h1>Rapport d'Évaluation pour {{ employee }}</h1>
+    <h2>Score Moyen: {{ average_score }}</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Évaluateur</th>
+                <th>Score</th>
+                <th>Commentaires</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for evaluation in evaluations %}
+            <tr>
+                <td>{{ evaluation.date }}</td>
+                <td>{{ evaluation.evaluator }}</td>
+                <td>{{ evaluation.performance_score }}</td>
+                <td>{{ evaluation.comments }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!-- core/templates/leave_balance.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Solde des congés pour {{ employee.nom }} {{ employee.prenom }}</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Type de congé</th>
+            <th>Solde</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Congés annuels</td>
+            <td>{{ leave_balance.annual_leave_balance }} jours</td>
+        </tr>
+        <tr>
+            <td>Congés maladie</td>
+            <td>{{ leave_balance.sick_leave_balance }} jours</td>
+        </tr>
+        <tr>
+            <td>Congés cumulés</td>
+            <td>{{ leave_balance.cumulative_leave }} jours</td>
+        </tr>
+    </tbody>
+</table>
+
+<a href="{% url 'manage_employees' %}" class="btn btn-secondary">Retour</a>
+{% endblock %}

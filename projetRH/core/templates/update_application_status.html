@@ -1,0 +1,16 @@
+<!--core/templates/ update_application_status.html -->
+
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Modifier le statut de la candidature de {{ application.candidate.username }}</h1>
+<form method="post">
+    {% csrf_token %}
+    <select name="status">
+        {% for status in application.STATUS_CHOICES %}
+        <option value="{{ status.0 }}" {% if status.0 == application.status %}selected{% endif %}>{{ status.1 }}</option>
+        {% endfor %}
+    </select>
+    <button type="submit" class="btn btn-primary">Mettre à jour</button>
+</form>
+{% endblock %}

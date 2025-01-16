@@ -1,0 +1,14 @@
+<!-- templates/add_evaluation.html -->
+{% extends 'base.html' %}
+
+{% load static %}
+
+
+{% block content %}
+<h1>Ajouter une Évaluation</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success">Enregistrer</button>
+</form>
+{% endblock %}

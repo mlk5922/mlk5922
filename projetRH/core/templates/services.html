@@ -1,0 +1,54 @@
+<!-- templates/services.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mt-4 mb-4">Liste des Services</h1>
+
+    <!-- Barre de recherche -->
+    <form method="get" action="{% url 'manage_services' %}" class="mb-4">
+        <div class="input-group">
+            <input type="text" name="q" class="form-control" placeholder="Rechercher un service…" value="{{ request.GET.q }}">
+            <button type="submit" class="btn btn-primary">Rechercher</button>
+        </div>
+    </form>
+
+    <!-- Bouton pour imprimer la liste -->
+    <a href="{% url 'print_services' %}" class="btn btn-secondary mb-4" target="_blank">
+        <i class="fas fa-print"></i> Imprimer la liste
+    </a>
+
+    <!-- Tableau des services -->
+    <table class="table table-bordered table-striped">
+        <thead class="thead-light">
+            <tr>
+                <th>Code</th>
+                <th>Description</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for service in services %}
+            <tr>
+                <td>{{ service.code }}</td>
+                <td>{{ service.description }}</td>
+                <td>
+                    <a href="{% url 'edit_service' service.id %}" class="btn btn-sm btn-warning">
+                        <i class="fas fa-edit"></i> Modifier
+                    </a>
+                    <a href="{% url 'delete_service' service.id %}" class="btn btn-sm btn-danger">
+                        <i class="fas fa-trash"></i> Supprimer
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Bouton pour ajouter un service -->
+    <a href="{% url 'add_service' %}" class="btn btn-success">
+        <i class="fas fa-plus"></i> Ajouter un service
+    </a>
+</div>
+{% endblock %}

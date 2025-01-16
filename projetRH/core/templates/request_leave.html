@@ -1,0 +1,12 @@
+<!-- templates/request_leave.html -->
+
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Demander un Congé</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success">Envoyer</button>
+</form>
+{% endblock %}

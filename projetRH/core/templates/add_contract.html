@@ -1,0 +1,14 @@
+<!-- core/templates/add_contract.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+
+
+{% block content %}
+<h1>Ajouter un Contrat</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success">Enregistrer</button>
+</form>
+{% endblock %}

@@ -1,0 +1,35 @@
+<!-- core/templates/job_posting_detail.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <!-- Titre de l'offre d'emploi -->
+    <h1>{{ job_posting.title }}</h1>
+
+    <!-- Type de contrat -->
+    <p><strong>Type de contrat :</strong> {{ job_posting.get_contract_type_display }}</p>
+
+    <!-- Service associé -->
+    <p><strong>Service :</strong> {{ job_posting.service.description }}</p>
+
+    <!-- Description de l'offre -->
+    <p><strong>Description :</strong></p>
+    <p>{{ job_posting.description }}</p>
+
+    <!-- Statut de l'offre (active ou inactive) -->
+    <p><strong>Statut :</strong> {% if job_posting.active %}Active{% else %}Inactive{% endif %}</p>
+
+    <!-- Indicateur si le poste est pourvu -->
+    <p><strong>Poste pourvu :</strong> {% if job_posting.is_filled %}Oui{% else %}Non{% endif %}</p>
+
+    <!-- Bouton pour postuler (visible uniquement si le poste n'est pas pourvu) -->
+    {% if not job_posting.is_filled %}
+        <a href="{% url 'apply_job' job_posting.id %}" class="btn btn-primary">Postuler</a>
+    {% else %}
+        <p class="text-danger">Cette offre d'emploi n'est plus disponible.</p>
+    {% endif %}
+
+    <!-- Lien pour revenir à la liste des offres -->
+    <a href="{% url 'manage_recruitment' %}" class="btn btn-secondary mt-3">Retour à la liste des offres</a>
+</div>
+{% endblock %}

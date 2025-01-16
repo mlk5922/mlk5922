@@ -1,0 +1,117 @@
+<!-- dashboard.html -->
+
+{% extends 'base.html' %}
+{% block content %}
+<div class="dashboard-container">
+    <!-- Résumé des statistiques en haut -->
+    <div class="stats-overview">
+        <div class="stat-card primary">
+            <i class="fas fa-users stat-icon"></i>
+            <div class="stat-details">
+                <h3>Employés</h3>
+                <p class="stat-number">{{ total_employees }}</p>
+            </div>
+        </div>
+        <div class="stat-card success">
+            <i class="fas fa-file-contract stat-icon"></i>
+            <div class="stat-details">
+                <h3>Contrats Actifs</h3>
+                <p class="stat-number">{{ active_contracts }}</p>
+            </div>
+        </div>
+        <div class="stat-card warning">
+            <i class="fas fa-calendar-alt stat-icon"></i>
+            <div class="stat-details">
+                <h3>Congés en Attente</h3>
+                <p class="stat-number">{{ pending_leaves }}</p>
+            </div>
+        </div>
+        <div class="stat-card info">
+            <i class="fas fa-money-bill-wave stat-icon"></i>
+            <div class="stat-details">
+                <h3>Total Salaires</h3>
+                <p class="stat-number">{{ total_salaries }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Grille principale des graphiques -->
+    <div class="dashboard-grid">
+        <!-- Graphique de répartition par service -->
+        <div class="dashboard-card large">
+            <div class="card-header">
+                <h2><i class="fas fa-chart-pie"></i> Répartition par Service</h2>
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    {{ diversity_fig|safe }}
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistiques de diversité -->
+        <div class="dashboard-card">
+            <div class="card-header">
+                <h2><i class="fas fa-users-cog"></i> Diversité</h2>
+            </div>
+            <div class="card-body">
+                <div class="diversity-stats">
+                    <div class="diversity-item">
+                        <span class="label">Hommes</span>
+                        <span class="value">{{ diversity_data.male_count }}</span>
+                    </div>
+                    <div class="diversity-item">
+                        <span class="label">Femmes</span>
+                        <span class="value">{{ diversity_data.female_count }}</span>
+                    </div>
+                    <div class="diversity-item">
+                        <span class="label">Autres</span>
+                        <span class="value">{{ diversity_data.other_count }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Types de contrats -->
+        <div class="dashboard-card">
+            <div class="card-header">
+                <h2><i class="fas fa-file-signature"></i> Types de Contrats</h2>
+            </div>
+            <div class="card-body">
+                {{ contract_fig|safe }}
+            </div>
+        </div>
+
+        <!-- Performance -->
+        <div class="dashboard-card">
+            <div class="card-header">
+                <h2><i class="fas fa-chart-line"></i> Performance Annuelle</h2>
+            </div>
+            <div class="card-body">
+                {{ performance_fig|safe }}
+            </div>
+        </div>
+    </div>
+
+    <!-- Section des favoris -->
+    <div class="dashboard-card">
+        <div class="card-header">
+            <h2><i class="fas fa-star"></i> Favoris</h2>
+        </div>
+        <div class="card-body">
+            {% if favorites %}
+                <div class="favorites-grid">
+                    {% for favorite in favorites %}
+                    <a href="{{ favorite.url }}" class="favorite-item">
+                        <i class="fas fa-link"></i>
+                        <span>{{ favorite.name }}</span>
+                    </a>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="no-data">Aucun favori pour le moment</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,13 @@
+<!-- templates/edit_training.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<h1 class="mb-4">Modifier la formation</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Enregistrer</button>
+    <a href="{% url 'manage_trainings' %}" class="btn btn-secondary">Annuler</a>
+</form>
+{% endblock %}

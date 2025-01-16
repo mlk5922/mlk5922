@@ -1,0 +1,51 @@
+<!-- templates/trainings_for_employee.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<h1 class="mb-4">Formations de {{ employee.nom }} {{ employee.prenom }}</h1>
+
+<!-- Filtres -->
+<form method="get" class="mb-4">
+    <div class="row">
+        <div class="col-md-6">
+            <input type="text" name="q" class="form-control" placeholder="Rechercher par titre ou description" value="{{ request.GET.q }}">
+        </div>
+        <div class="col-md-4">
+            <select name="status" class="form-select">
+                <option value="">Tous les statuts</option>
+                {% for value, label in status_choices %}
+                    <option value="{{ value }}" {% if request.GET.status == value %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100">Filtrer</button>
+        </div>
+    </div>
+</form>
+
+<!-- Liste des formations -->
+<table class="table">
+    <thead>
+        <tr>
+            <th>Titre</th>
+            <th>Description</th>
+            <th>Date de début</th>
+            <th>Date de fin</th>
+            <th>Statut</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for training in trainings %}
+        <tr>
+            <td>{{ training.title }}</td>
+            <td>{{ training.description }}</td>
+            <td>{{ training.start_date }}</td>
+            <td>{{ training.end_date }}</td>
+            <td>{{ training.get_status_display }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

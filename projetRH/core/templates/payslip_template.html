@@ -1,0 +1,16 @@
+<!-- core/templates/payslip_template.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fiche de paie</title>
+</head>
+<body>
+    <h1>Fiche de paie</h1>
+    <p>Employé: {{ payslip.employee.nom }} {{ payslip.employee.prenom }}</p>
+    <p>Mois/Année: {{ payslip.month }}/{{ payslip.year }}</p>
+    <p>Salaire de base: {{ payslip.base_salary }}</p>
+    <p>Bonus: {{ payslip.bonuses }}</p>
+    <p>Déductions: {{ payslip.deductions }}</p>
+    <p>Salaire net: {{ payslip.net_salary }}</p>
+</body>
+</html>

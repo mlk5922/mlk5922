@@ -1,0 +1,78 @@
+<!-- templates/leaves.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<h1 class="mb-4">Liste des Congés</h1>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Employé</th>
+            <th>Type</th>
+            <th>Date de Début</th>
+            <th>Date de Fin</th>
+            <th>Statut</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for leave in leaves %}
+        <tr>
+            <td>{{ leave.employee }}</td>
+            <td>{{ leave.type }}</td>
+            <td>{{ leave.start_date }}</td>
+            <td>{{ leave.end_date }}</td>
+            <td>{{ leave.status }}</td>
+            <td>
+                <!-- Bouton pour ouvrir la modale d'approbation -->
+                <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#approveModal{{ leave.id }}">
+                    <i class="fas fa-check"></i> Approuver
+                </button>
+                <!-- Bouton pour ouvrir la modale de rejet -->
+                <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#rejectModal{{ leave.id }}">
+                    <i class="fas fa-times"></i> Rejeter
+                </button>
+            </td>
+        </tr>
+
+        <!-- Modale pour confirmer l'approbation -->
+        <div class="modal fade" id="approveModal{{ leave.id }}" tabindex="-1" aria-labelledby="approveModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="approveModalLabel">Confirmer l'approbation</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Êtes-vous sûr de vouloir approuver ce congé ?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <a href="{% url 'approve_leave' leave.id %}" class="btn btn-success">Confirmer</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modale pour confirmer le rejet -->
+        <div class="modal fade" id="rejectModal{{ leave.id }}" tabindex="-1" aria-labelledby="rejectModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="rejectModalLabel">Confirmer le rejet</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Êtes-vous sûr de vouloir rejeter ce congé ?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <a href="{% url 'reject_leave' leave.id %}" class="btn btn-danger">Confirmer</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </tbody>
+</table>
+<a href="{% url 'request_leave' %}" class="btn btn-primary">Demander un Congé</a>
+{% endblock %}

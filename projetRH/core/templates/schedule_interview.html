@@ -1,0 +1,11 @@
+<!-- templates/schedule_interview.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Planifier un Entretien pour {{ job_application.job_posting.title }}</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success">Planifier</button>
+</form>
+{% endblock %}

@@ -1,0 +1,14 @@
+<!-- templates/registration/logged_out.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 text-center">
+            <h2>Vous avez été déconnecté</h2>
+            <p>Merci d'avoir utilisé notre système de gestion RH.</p>
+            <a href="{% url 'login' %}" class="btn btn-primary">Se reconnecter</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

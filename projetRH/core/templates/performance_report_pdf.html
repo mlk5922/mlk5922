@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Rapport de Performance - {{ employee.prenom }} {{ employee.nom }}</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        h1 { color: #333; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+    <h1>Rapport de Performance - {{ employee.prenom }} {{ employee.nom }}</h1>
+    
+    <h2>Évaluations</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Évaluateur</th>
+                <th>Score</th>
+                <th>Commentaires</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for evaluation in evaluations %}
+            <tr>
+                <td>{{ evaluation.date|date:"d/m/Y" }}</td>
+                <td>{{ evaluation.evaluator.username }}</td>
+                <td>{{ evaluation.performance_score }}</td>
+                <td>{{ evaluation.comments }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Statistiques de Performance</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Année</th>
+                <th>Score de performance</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for stat in performance_stats %}
+            <tr>
+                <td>{{ stat.year }}</td>
+                <td>{{ stat.performance_score }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

@@ -1,0 +1,25 @@
+<!-- core/templates/apply_job.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <!-- Titre de la page -->
+    <h1>Postuler à l'offre : {{ job_posting.title }}</h1>
+
+    <!-- Informations sur l'offre -->
+    <p><strong>Type de contrat :</strong> {{ job_posting.get_contract_type_display }}</p>
+    <p><strong>Service :</strong> {{ job_posting.service.description }}</p>
+
+    <!-- Formulaire de candidature -->
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <!-- Afficher les champs du formulaire -->
+        {{ form.as_p }}
+        <!-- Bouton de soumission -->
+        <button type="submit" class="btn btn-success">Soumettre ma candidature</button>
+    </form>
+
+    <!-- Lien pour revenir à l'offre d'emploi -->
+    <a href="{% url 'job_posting_detail' job_posting.id %}" class="btn btn-secondary mt-3">Retour à l'offre</a>
+</div>
+{% endblock %}

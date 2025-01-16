@@ -1,0 +1,76 @@
+<!-- trainings.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<h1 class="mb-4">Liste des formations</h1>
+
+<!-- Formulaire de recherche -->
+<form method="get" class="mb-4">
+    <div class="input-group">
+        <input type="text" name="q" class="form-control" placeholder="Rechercher par titre ou description" value="{{ request.GET.q }}">
+        <select name="status" class="form-select">
+            <option value="">Tous les statuts</option>
+            <option value="PLANNED" {% if request.GET.status == "PLANNED" %}selected{% endif %}>Planifiée</option>
+            <option value="IN_PROGRESS" {% if request.GET.status == "IN_PROGRESS" %}selected{% endif %}>En cours</option>
+            <option value="COMPLETED" {% if request.GET.status == "COMPLETED" %}selected{% endif %}>Terminée</option>
+            <option value="CANCELLED" {% if request.GET.status == "CANCELLED" %}selected{% endif %}>Annulée</option>
+        </select>
+        <button type="submit" class="btn btn-primary">Rechercher</button>
+    </div>
+</form>
+
+<!-- Tableau des formations -->
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Titre</th>
+            <th>Description</th>
+            <th>Statut</th>
+            <th>Employé</th>
+            <th>Date de début</th>
+            <th>Date de fin</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for training in trainings %}
+        <tr>
+            <td>{{ training.title }}</td>
+            <td>{{ training.description }}</td>
+            <td>
+                <span class="badge 
+                    {% if training.status == 'PLANNED' %}bg-primary
+                    {% elif training.status == 'IN_PROGRESS' %}bg-warning
+                    {% elif training.status == 'COMPLETED' %}bg-success
+                    {% elif training.status == 'CANCELLED' %}bg-danger
+                    {% endif %}">
+                    {{ training.get_status_display }}
+                </span>
+            </td>
+            <td>{{ training.employee.nom }} {{ training.employee.prenom }}</td>
+            <td>{{ training.start_date|date:"d/m/Y" }}</td>
+            <td>{{ training.end_date|date:"d/m/Y" }}</td>
+            <td>
+                <a href="{% url 'edit_training_for_employee' training.id %}" class="btn btn-warning btn-sm">Modifier</a>
+                <a href="{% url 'delete_training_for_employee' training.id %}" class="btn btn-danger btn-sm">Supprimer</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="7" class="text-center">Aucune formation trouvée.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- Bouton Ajouter une formation -->
+{% if employee %}
+    <a href="{% url 'add_training_for_employee' employee_id=employee.id %}" class="btn btn-primary">Ajouter une formation</a>
+{% else %}
+    <div class="alert alert-warning" role="alert">
+        Aucun employé disponible pour ajouter une formation.
+    </div>
+{% endif %}
+
+{% endblock %}

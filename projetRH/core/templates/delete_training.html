@@ -1,0 +1,13 @@
+{% extends 'base.html' %}  <!-- Assurez-vous d'avoir un template de base -->
+
+{% block content %}
+<div class="container">
+    <h2>Supprimer la formation "{{ training.title }}"</h2>
+    <p>Êtes-vous sûr de vouloir supprimer cette formation ? Cette action est irréversible.</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Supprimer</button>
+        <a href="{% url 'employee_detail' training.employee.id %}" class="btn btn-secondary">Annuler</a>
+    </form>
+</div>
+{% endblock %}

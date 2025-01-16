@@ -1,0 +1,109 @@
+<!-- templates/salaries.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<h1 class="mb-4">Liste des Salaires</h1>
+
+<!-- Barre de recherche et filtrage -->
+<form method="get" class="mb-4">
+    <div class="form-row">
+        <div class="col-md-4 mb-3">
+            <input type="text" name="q" class="form-control" placeholder="Rechercher par employé..." value="{{ request.GET.q }}">
+        </div>
+        <div class="col-md-3 mb-3">
+            <input type="number" name="month" class="form-control" placeholder="Mois" value="{{ request.GET.month }}">
+        </div>
+        <div class="col-md-3 mb-3">
+            <input type="number" name="year" class="form-control" placeholder="Année" value="{{ request.GET.year }}">
+        </div>
+        <div class="col-md-2 mb-3">
+            <button type="submit" class="btn btn-primary btn-block">
+                <i class="fas fa-search"></i> Rechercher
+            </button>
+        </div>
+    </div>
+</form>
+
+<!-- Bouton pour ajouter un salaire -->
+<a href="{% url 'generate_salary' %}" class="btn btn-success mb-3">
+    <i class="fas fa-plus"></i> Ajouter un Salaire
+</a>
+
+<!-- Tableau des salaires -->
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Employé</th>
+            <th>Mois</th>
+            <th>Année</th>
+            <th>Salaire Net</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for salary in salaries %}
+        <tr>
+            <td>{{ salary.employee.nom }} {{ salary.employee.prenom }}</td>
+            <td>{{ salary.month }}</td>
+            <td>{{ salary.year }}</td>
+            <td>{{ salary.net_salary }}</td>
+            <td>
+                <!-- Lien pour consulter la fiche de paie -->
+                <a href="{% url 'generate_payslip' salary.employee.id salary.month salary.year %}" class="btn btn-info btn-sm">
+                    <i class="fas fa-file-invoice"></i> Fiche de Paie
+                </a>
+                <!-- Lien pour modifier un salaire -->
+                <a href="{% url 'edit_salary' salary.id %}" class="btn btn-warning btn-sm">
+                    <i class="fas fa-edit"></i> Modifier
+                </a>
+                <!-- Lien pour supprimer un salaire -->
+                <a href="{% url 'delete_salary' salary.id %}" class="btn btn-danger btn-sm">
+                    <i class="fas fa-trash"></i> Supprimer
+                </a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5" class="text-center">Aucun salaire trouvé.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- Pagination -->
+{% if salaries.has_other_pages %}
+<nav aria-label="Page navigation">
+    <ul class="pagination">
+        {% if salaries.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ salaries.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.month %}&month={{ request.GET.month }}{% endif %}{% if request.GET.year %}&year={{ request.GET.year }}{% endif %}" aria-label="Précédent">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <span class="page-link">&laquo;</span>
+        </li>
+        {% endif %}
+
+        {% for i in salaries.paginator.page_range %}
+        <li class="page-item {% if salaries.number == i %}active{% endif %}">
+            <a class="page-link" href="?page={{ i }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.month %}&month={{ request.GET.month }}{% endif %}{% if request.GET.year %}&year={{ request.GET.year }}{% endif %}">{{ i }}</a>
+        </li>
+        {% endfor %}
+
+        {% if salaries.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ salaries.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.month %}&month={{ request.GET.month }}{% endif %}{% if request.GET.year %}&year={{ request.GET.year }}{% endif %}" aria-label="Suivant">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <span class="page-link">&raquo;</span>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+{% endblock %}

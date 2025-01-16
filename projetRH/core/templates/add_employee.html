@@ -1,0 +1,86 @@
+<!-- templates/add_employee.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<h1 class="mb-4">Ajouter un Employé</h1>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    
+    <!-- Section Utilisateur -->
+    <div class="mb-3">
+        <label for="user" class="form-label">Utilisateur</label>
+        <select class="form-select" id="user" name="user" required>
+            <option value="">Sélectionnez un utilisateur</option>
+            {% for user in users %}
+                <option value="{{ user.id }}">{{ user.username }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <!-- Section Informations Personnelles -->
+    <div class="mb-3">
+        <label for="nom" class="form-label">Nom</label>
+        <input type="text" class="form-control" id="nom" name="nom" required>
+    </div>
+    <div class="mb-3">
+        <label for="prenom" class="form-label">Prénom</label>
+        <input type="text" class="form-control" id="prenom" name="prenom" required>
+    </div>
+    <div class="mb-3">
+        <label for="code" class="form-label">Code employé</label>
+        <input type="text" class="form-control" id="code" name="code" required>
+    </div>
+
+    <!-- Section Service -->
+    <div class="mb-3">
+        <label for="service" class="form-label">Service</label>
+        <select class="form-select" id="service" name="service" required>
+            <option value="">Sélectionnez un service</option>
+            {% for service in services %}
+                <option value="{{ service.id }}">{{ service.code }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <!-- Section Dates -->
+    <div class="mb-3">
+        <label for="birth_date" class="form-label">Date de naissance</label>
+        <input type="date" class="form-control" id="birth_date" name="birth_date" required>
+    </div>
+    <div class="mb-3">
+        <label for="hire_date" class="form-label">Date d’embauche</label>
+        <input type="date" class="form-control" id="hire_date" name="hire_date" required>
+    </div>
+
+    <!-- Section Salaire -->
+    <div class="mb-3">
+        <label for="base_salary" class="form-label">Salaire de base</label>
+        <input type="number" class="form-control" id="base_salary" name="base_salary" required>
+    </div>
+    <div class="mb-3">
+        <label for="daily_salary" class="form-label">Salaire journalier</label>
+        <input type="number" class="form-control" id="daily_salary" name="daily_salary" required>
+    </div>
+
+    <!-- Section Formations -->
+    <div class="mb-3">
+        <label for="trainings" class="form-label">Formations</label>
+        <select class="form-select" id="trainings" name="trainings" multiple>
+            {% for training in trainings %}
+                <option value="{{ training.id }}">{{ training.title }}</option>
+            {% endfor %}
+        </select>
+        <small class="form-text text-muted">Maintenez la touche Ctrl (ou Cmd) enfoncée pour sélectionner plusieurs formations.</small>
+    </div>
+
+    <!-- Section Documents -->
+    <div class="mb-3">
+        <label for="documents" class="form-label">Documents</label>
+        <input type="file" class="form-control" id="documents" name="documents" multiple>
+    </div>
+
+    <!-- Bouton de soumission -->
+    <button type="submit" class="btn btn-primary">Enregistrer</button>
+</form>
+{% endblock %}

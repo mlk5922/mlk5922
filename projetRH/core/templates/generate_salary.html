@@ -1,0 +1,29 @@
+<!-- core/templates/generate_salary.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Générer un salaire</h1>
+
+<form method="post">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="employee_id">Employé</label>
+        <select name="employee_id" id="employee_id" class="form-control" required>
+            {% for employee in employees %}
+            <option value="{{ employee.id }}">{{ employee.nom }} {{ employee.prenom }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="month">Mois</label>
+        <input type="number" name="month" id="month" class="form-control" min="1" max="12" required>
+    </div>
+    <div class="form-group">
+        <label for="year">Année</label>
+        <input type="number" name="year" id="year" class="form-control" min="2020" max="2100" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Générer</button>
+</form>
+
+<a href="{% url 'manage_salaries' %}" class="btn btn-secondary">Retour</a>
+{% endblock %}

@@ -1,0 +1,207 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1>Fiche Employé : {{ employee.prenom }} {{ employee.nom }}</h1>
+    
+    <!-- Informations personnelles -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h2>Informations Personnelles</h2>
+        </div>
+        <div class="card-body">
+            <table class="table">
+                <tbody>
+                    {% for key, value in personal_info.items %}
+                    <tr>
+                        <th>{{ key }}</th>
+                        <td>{{ value }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Historique des contrats -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h2>Historique des Contrats</h2>
+        </div>
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Date de début</th>
+                        <th>Date de fin</th>
+                        <th>Salaire mensuel</th>
+                        <th>Statut</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for contract in contracts %}
+                    <tr>
+                        <td>{{ contract.get_type_display }}</td>
+                        <td>{{ contract.start_date }}</td>
+                        <td>{{ contract.end_date|default:"-" }}</td>
+                        <td>{{ contract.monthly_salary }}</td>
+                        <td>{% if contract.is_active %}Actif{% else %}Inactif{% endif %}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Congés -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h2>Historique des Congés</h2>
+        </div>
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Date de début</th>
+                        <th>Date de fin</th>
+                        <th>Statut</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for leave in leaves %}
+                    <tr>
+                        <td>{{ leave.get_type_display }}</td>
+                        <td>{{ leave.start_date }}</td>
+                        <td>{{ leave.end_date }}</td>
+                        <td>{{ leave.get_status_display }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Compétences -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h2>Compétences</h2>
+        </div>
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Compétence</th>
+                        <th>Niveau</th>
+                        <th>Date d'acquisition</th>
+                        <th>Vérifié</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for skill in employee_skills %}
+                    <tr>
+                        <td>{{ skill.skill.name }}</td>
+                        <td>{{ skill.level }}</td>
+                        <td>{{ skill.acquired_date }}</td>
+                        <td>{% if skill.is_verified %}Oui{% else %}Non{% endif %}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Formations -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h2>Formations</h2>
+        </div>
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Titre</th>
+                        <th>Date de début</th>
+                        <th>Date de fin</th>
+                        <th>Statut</th>
+                        <th>Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for training in trainings %}
+                    <tr>
+                        <td>{{ training.title }}</td>
+                        <td>{{ training.start_date }}</td>
+                        <td>{{ training.end_date }}</td>
+                        <td>{{ training.get_status_display }}</td>
+                        <td>{{ training.score|default:"-" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Évaluations -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h2>Évaluations</h2>
+        </div>
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Évaluateur</th>
+                        <th>Score</th>
+                        <th>Commentaires</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for evaluation in evaluations %}
+                    <tr>
+                        <td>{{ evaluation.date }}</td>
+                        <td>{{ evaluation.evaluator.username }}</td>
+                        <td>{{ evaluation.performance_score }}</td>
+                        <td>{{ evaluation.comments }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Rapports de performance -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h2>Rapports de Performance</h2>
+        </div>
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Année</th>
+                        <th>Score de performance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for stat in performance_stats %}
+                    <tr>
+                        <td>{{ stat.year }}</td>
+                        <td>{{ stat.performance_score }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Bouton pour générer le rapport de performance en PDF -->
+    <div class="text-center">
+        <a href="{% url 'generate_performance_report_pdf' employee.id %}" class="btn btn-primary">
+            Générer le rapport de performance en PDF
+        </a>
+    </div>
+</div>
+{% endblock %}

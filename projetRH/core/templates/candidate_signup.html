@@ -1,0 +1,12 @@
+<!-- candidate_signup.html -->
+
+{% extends 'base.html' %}
+{% block content %}
+<h2>Inscription Candidat</h2>
+<!-- Formulaire d'inscription -->
+<form method="post">
+    {% csrf_token %}  <!-- Protection contre les attaques CSRF -->
+    {{ form.as_p }}  <!-- Afficher les champs du formulaire -->
+    <button type="submit">S'inscrire</button>  <!-- Bouton de soumission -->
+</form>
+{% endblock %}

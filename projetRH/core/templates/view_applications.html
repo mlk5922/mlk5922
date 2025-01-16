@@ -1,0 +1,28 @@
+<!--core/templates/ view_applications.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Candidatures pour {{ job_posting.title }}</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Candidat</th>
+            <th>Statut</th>
+            <th>Date de candidature</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for application in applications %}
+        <tr>
+            <td>{{ application.candidate.username }}</td>
+            <td>{{ application.get_status_display }}</td>
+            <td>{{ application.created_at }}</td>
+            <td>
+                <a href="{% url 'update_application_status' application.id %}" class="btn btn-warning">Modifier le statut</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
