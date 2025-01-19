@@ -1,14 +1,21 @@
-<!--core/templates/ skills.html -->
+<!-- core/templates/skills.html -->
 {% extends 'base.html' %}
 
 {% block content %}
 <h1>Liste des Compétences</h1>
+
+<!-- Bouton pour ajouter une compétence -->
+<a href="{% url 'add_skill' %}" class="btn btn-primary mb-3">
+    <i class="fas fa-plus"></i> Ajouter une compétence
+</a>
+
 <table class="table">
     <thead>
         <tr>
             <th>Nom</th>
             <th>Catégorie</th>
             <th>Description</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -17,6 +24,16 @@
             <td>{{ skill.name }}</td>
             <td>{{ skill.category }}</td>
             <td>{{ skill.description }}</td>
+            <td>
+                <!-- Bouton pour modifier une compétence -->
+                <a href="{% url 'edit_skill' skill.id %}" class="btn btn-warning btn-sm">
+                    <i class="fas fa-edit"></i> Modifier
+                </a>
+                <!-- Bouton pour supprimer une compétence -->
+                <a href="{% url 'delete_skill' skill.id %}" class="btn btn-danger btn-sm">
+                    <i class="fas fa-trash"></i> Supprimer
+                </a>
+            </td>
         </tr>
         {% endfor %}
     </tbody>

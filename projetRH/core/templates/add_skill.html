@@ -1,0 +1,43 @@
+<!-- core/templates/add_skill.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<h1 class="mb-4">Ajouter une Compétence</h1>
+<form method="post">
+    {% csrf_token %}
+    
+    <!-- Section Nom de la Compétence -->
+    <div class="mb-3">
+        <label for="name" class="form-label">Nom de la Compétence</label>
+        <input type="text" class="form-control" id="name" name="name" required>
+    </div>
+
+    <!-- Section Description -->
+    <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+    </div>
+
+    <!-- Section Catégorie -->
+    <div class="mb-3">
+        <label for="category" class="form-label">Catégorie</label>
+        <input type="text" class="form-control" id="category" name="category">
+    </div>
+
+    <!-- Section Niveau de Compétence -->
+    <div class="mb-3">
+        <label for="level" class="form-label">Niveau de Compétence</label>
+        <select class="form-select" id="level" name="level" required>
+            <option value="">Sélectionnez un niveau</option>
+            <option value="Débutant">Débutant</option>
+            <option value="Intermédiaire">Intermédiaire</option>
+            <option value="Avancé">Avancé</option>
+            <option value="Expert">Expert</option>
+        </select>
+    </div>
+
+    <!-- Bouton de soumission -->
+    <button type="submit" class="btn btn-primary">Ajouter</button>
+</form>
+{% endblock %}

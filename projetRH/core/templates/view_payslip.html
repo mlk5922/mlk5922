@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mt-4 mb-4">Fiche de paie pour {{ payslip.month }}/{{ payslip.year }}</h1>
+
+    <!-- Détails de la fiche de paie -->
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Détails de la fiche de paie</h5>
+
+            <p><strong>Salaire de base :</strong> {{ payslip.base_salary }}</p>
+            <p><strong>Bonus :</strong> {{ payslip.bonuses }}</p>
+            <p><strong>Déductions :</strong> {{ payslip.deductions }}</p>
+            <p><strong>Salaire net :</strong> {{ payslip.net_salary }}</p>
+
+            <!-- Bouton pour télécharger la fiche de paie -->
+            <a href="{% url 'download_payslip' payslip.id %}" class="btn btn-primary">
+                <i class="fas fa-download"></i> Télécharger la fiche de paie
+            </a>
+        </div>
+    </div>
+
+    <!-- Lien pour revenir à la liste des salaires -->
+    <div class="mt-4">
+        <a href="{% url 'manage_salaries' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Retour à la liste des salaires
+        </a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,11 @@
+<!-- core/templates/edit_skill.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Modifier la compétence</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-warning">Modifier</button>
+</form>
+{% endblock %}

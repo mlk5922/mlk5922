@@ -1,12 +1,12 @@
 <!-- templates/edit_contract.html -->
-
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
 <h1>Modifier le Contrat</h1>
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit" class="btn btn-warning">Modifier</button>
+    <button type="submit" class="btn btn-warning">Enregistrer les modifications</button>
 </form>
 {% endblock %}

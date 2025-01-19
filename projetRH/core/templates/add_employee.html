@@ -7,15 +7,30 @@
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     
-    <!-- Section Utilisateur -->
+    <!-- Afficher les erreurs du formulaire -->
+    {% if form.errors %}
+        <div class="alert alert-danger">
+            <strong>Erreur(s) :</strong>
+            <ul>
+                {% for field, errors in form.errors.items %}
+                    {% for error in errors %}
+                        <li>{{ field }}: {{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+    <!-- Section Utilisateur (optionnelle) -->
     <div class="mb-3">
-        <label for="user" class="form-label">Utilisateur</label>
-        <select class="form-select" id="user" name="user" required>
-            <option value="">Sélectionnez un utilisateur</option>
+        <label for="user" class="form-label">Utilisateur (optionnel)</label>
+        <select class="form-select" id="user" name="user">
+            <option value="">Aucun utilisateur</option>
             {% for user in users %}
                 <option value="{{ user.id }}">{{ user.username }}</option>
             {% endfor %}
         </select>
+        <small class="form-text text-muted">Laissez ce champ vide si l'employé n'a pas de compte utilisateur.</small>
     </div>
 
     <!-- Section Informations Personnelles -->
@@ -30,6 +45,32 @@
     <div class="mb-3">
         <label for="code" class="form-label">Code employé</label>
         <input type="text" class="form-control" id="code" name="code" required>
+        <small class="form-text text-muted">Le code employé doit être unique.</small>
+    </div>
+
+    <!-- Section Genre -->
+    <div class="mb-3">
+        <label for="gender" class="form-label">Genre</label>
+        <select class="form-select" id="gender" name="gender" required>
+            <option value="">Sélectionnez un genre</option>
+            <option value="M">Masculin</option>
+            <option value="F">Féminin</option>
+            <option value="O">Autre</option>
+        </select>
+    </div>
+
+    <!-- Section Numéro de téléphone -->
+    <div class="mb-3">
+        <label for="phone" class="form-label">Numéro de téléphone</label>
+        <input type="text" class="form-control" id="phone" name="phone">
+        <small class="form-text text-muted">Format : +1234567890</small>
+    </div>
+
+    <!-- Section Adresse -->
+    <div class="mb-3">
+        <label for="address" class="form-label">Adresse</label>
+        <textarea class="form-control" id="address" name="address" rows="3"></textarea>
+        <small class="form-text text-muted">Adresse complète de l'employé.</small>
     </div>
 
     <!-- Section Service -->
@@ -38,7 +79,7 @@
         <select class="form-select" id="service" name="service" required>
             <option value="">Sélectionnez un service</option>
             {% for service in services %}
-                <option value="{{ service.id }}">{{ service.code }}</option>
+                <option value="{{ service.id }}">{{ service.code }} - {{ service.description }}</option>
             {% endfor %}
         </select>
     </div>
@@ -56,11 +97,13 @@
     <!-- Section Salaire -->
     <div class="mb-3">
         <label for="base_salary" class="form-label">Salaire de base</label>
-        <input type="number" class="form-control" id="base_salary" name="base_salary" required>
+        <input type="number" class="form-control" id="base_salary" name="base_salary" step="0.01" required>
+        <small class="form-text text-muted">Montant en devise locale.</small>
     </div>
     <div class="mb-3">
         <label for="daily_salary" class="form-label">Salaire journalier</label>
-        <input type="number" class="form-control" id="daily_salary" name="daily_salary" required>
+        <input type="number" class="form-control" id="daily_salary" name="daily_salary" step="0.01" required>
+        <small class="form-text text-muted">Montant en devise locale.</small>
     </div>
 
     <!-- Section Formations -->
@@ -68,19 +111,32 @@
         <label for="trainings" class="form-label">Formations</label>
         <select class="form-select" id="trainings" name="trainings" multiple>
             {% for training in trainings %}
-                <option value="{{ training.id }}">{{ training.title }}</option>
+                <option value="{{ training.id }}">{{ training.title }} ({{ training.start_date }} - {{ training.end_date }})</option>
             {% endfor %}
         </select>
         <small class="form-text text-muted">Maintenez la touche Ctrl (ou Cmd) enfoncée pour sélectionner plusieurs formations.</small>
+    </div>
+
+    <!-- Section Compétences -->
+    <div class="mb-3">
+        <label for="skills" class="form-label">Compétences</label>
+        <select class="form-select" id="skills" name="skills" multiple>
+            {% for skill in skills %}
+                <option value="{{ skill.id }}">{{ skill.name }} ({{ skill.category }})</option>
+            {% endfor %}
+        </select>
+        <small class="form-text text-muted">Maintenez la touche Ctrl (ou Cmd) enfoncée pour sélectionner plusieurs compétences.</small>
     </div>
 
     <!-- Section Documents -->
     <div class="mb-3">
         <label for="documents" class="form-label">Documents</label>
         <input type="file" class="form-control" id="documents" name="documents" multiple>
+        <small class="form-text text-muted">Téléchargez les documents pertinents (CV, contrat, etc.).</small>
     </div>
 
     <!-- Bouton de soumission -->
     <button type="submit" class="btn btn-primary">Enregistrer</button>
+    <a href="{% url 'manage_employees' %}" class="btn btn-secondary">Annuler</a>
 </form>
 {% endblock %}

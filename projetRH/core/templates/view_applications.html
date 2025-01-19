@@ -2,27 +2,47 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Candidatures pour {{ job_posting.title }}</h1>
-<table class="table">
-    <thead>
-        <tr>
-            <th>Candidat</th>
-            <th>Statut</th>
-            <th>Date de candidature</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for application in applications %}
-        <tr>
-            <td>{{ application.candidate.username }}</td>
-            <td>{{ application.get_status_display }}</td>
-            <td>{{ application.created_at }}</td>
-            <td>
-                <a href="{% url 'update_application_status' application.id %}" class="btn btn-warning">Modifier le statut</a>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="container">
+    <h1 class="mt-4 mb-4">Candidatures pour {{ job_posting.title }}</h1>
+
+    <!-- Liste des candidatures -->
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Liste des candidatures</h5>
+
+            <!-- Tableau des candidatures -->
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Candidat</th>
+                        <th>Statut</th>
+                        <th>Date de candidature</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for application in applications %}
+                    <tr>
+                        <td>{{ application.candidate.username }}</td>
+                        <td>{{ application.status }}</td>
+                        <td>{{ application.created_at }}</td>
+                        <td>
+                            <a href="{% url 'update_application_status' application.id %}" class="btn btn-primary">
+                                Modifier le statut
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Lien pour revenir à la liste des offres -->
+    <div class="mt-4">
+        <a href="{% url 'manage_recruitment' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Retour à la liste des offres
+        </a>
+    </div>
+</div>
 {% endblock %}

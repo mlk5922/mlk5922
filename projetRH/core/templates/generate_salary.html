@@ -1,29 +1,40 @@
 <!-- core/templates/generate_salary.html -->
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
-<h1>Générer un salaire</h1>
+<h1 class="mb-4">Générer un Salaire</h1>
 
 <form method="post">
     {% csrf_token %}
-    <div class="form-group">
-        <label for="employee_id">Employé</label>
-        <select name="employee_id" id="employee_id" class="form-control" required>
+    
+    <!-- Section Employé -->
+    <div class="mb-3">
+        <label for="employee_id" class="form-label">Employé</label>
+        <select class="form-select" id="employee_id" name="employee_id" required>
+            <option value="">Sélectionnez un employé</option>
             {% for employee in employees %}
-            <option value="{{ employee.id }}">{{ employee.nom }} {{ employee.prenom }}</option>
+                <option value="{{ employee.id }}">{{ employee.nom }} {{ employee.prenom }}</option>
             {% endfor %}
         </select>
     </div>
-    <div class="form-group">
-        <label for="month">Mois</label>
-        <input type="number" name="month" id="month" class="form-control" min="1" max="12" required>
+
+    <!-- Section Mois -->
+    <div class="mb-3">
+        <label for="month" class="form-label">Mois</label>
+        <input type="number" class="form-control" id="month" name="month" min="1" max="12" required>
     </div>
-    <div class="form-group">
-        <label for="year">Année</label>
-        <input type="number" name="year" id="year" class="form-control" min="2020" max="2100" required>
+
+    <!-- Section Année -->
+    <div class="mb-3">
+        <label for="year" class="form-label">Année</label>
+        <input type="number" class="form-control" id="year" name="year" min="2020" max="2100" required>
     </div>
+
+    <!-- Bouton de soumission -->
     <button type="submit" class="btn btn-primary">Générer</button>
 </form>
 
-<a href="{% url 'manage_salaries' %}" class="btn btn-secondary">Retour</a>
+<!-- Bouton Retour -->
+<a href="{% url 'manage_salaries' %}" class="btn btn-secondary mt-3">Retour</a>
 {% endblock %}

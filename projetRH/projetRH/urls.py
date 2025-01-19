@@ -47,6 +47,7 @@ def redirect_to_login(request):
 urlpatterns = [
     path('', redirect_to_login, name='root'),  # Redirige vers la page de login
     path('admin/', admin.site.urls),
+    path('core/', include('core.urls')),  # Inclure les URL de core
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='swagger'),
     path('api/', include('core.urls')),  # Les routes API sont sous /api/
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),  # Pour obtenir un jeton

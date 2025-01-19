@@ -1,0 +1,40 @@
+<!-- core/templates/add_bonus.html -->
+{% extends 'base.html' %}
+
+{% block title %}Ajouter une prime{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="my-4">Ajouter une prime</h1>
+    <div class="card">
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="{{ form.type.id_for_label }}">Type de prime</label>
+                    {{ form.type }}
+                    {% if form.type.errors %}
+                        <div class="text-danger">{{ form.type.errors }}</div>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.amount.id_for_label }}">Montant</label>
+                    {{ form.amount }}
+                    {% if form.amount.errors %}
+                        <div class="text-danger">{{ form.amount.errors }}</div>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.reason.id_for_label }}">Raison</label>
+                    {{ form.reason }}
+                    {% if form.reason.errors %}
+                        <div class="text-danger">{{ form.reason.errors }}</div>
+                    {% endif %}
+                </div>
+                <button type="submit" class="btn btn-primary">Ajouter</button>
+                <a href="{% url 'manage_bonuses' %}" class="btn btn-secondary">Annuler</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -34,13 +34,17 @@ class CandidateSignUpForm(forms.ModelForm):
         widget=forms.PasswordInput,
         help_text="Entrez le même mot de passe pour confirmation.",
     )
+    user_type = forms.ChoiceField(
+        choices=[('CANDIDATE', 'Candidat'), ('EMPLOYEE', 'Employé')],
+        label="Type d'utilisateur",
+        widget=forms.RadioSelect
+    )
 
     class Meta:
         model = User
         fields = ['username', 'email']
 
     def clean_password2(self):
-        # Vérifier que les deux mots de passe correspondent
         password1 = self.cleaned_data.get("password1")
         password2 = self.cleaned_data.get("password2")
         if password1 and password2 and password1 != password2:
@@ -48,11 +52,14 @@ class CandidateSignUpForm(forms.ModelForm):
         return password2
 
     def save(self, commit=True):
-        # Hasher le mot de passe avant de sauvegarder l'utilisateur
         user = super().save(commit=False)
-        user.set_password(self.cleaned_data["password1"])  # Hasher le mot de passe
-        user.is_candidate = True  # Marquer l'utilisateur comme candidat
-        user.is_active = False  # Désactiver le compte jusqu'à la confirmation par e-mail
+        user.set_password(self.cleaned_data["password1"])
+        user_type = self.cleaned_data.get("user_type")
+        if user_type == 'CANDIDATE':
+            user.is_candidate = True
+        elif user_type == 'EMPLOYEE':
+            user.is_employee = True
+        user.is_active = False
         if commit:
             user.save()
         return user
@@ -65,11 +72,14 @@ class CustomPermissionForm(forms.ModelForm):
 
 # Formulaire pour l'employé
 class EmployeeForm(forms.ModelForm):
-    trainings = forms.ModelMultipleChoiceField(queryset=Training.objects.all(), required=False)
-
     class Meta:
         model = Employee
         fields = '__all__'
+        widgets = {
+            'birth_date': forms.DateInput(attrs={'type': 'date'}),
+            'hire_date': forms.DateInput(attrs={'type': 'date'}),
+            'trainings': forms.SelectMultiple(attrs={'class': 'form-select'}),
+        }
 # Formulaire pour le service
 class ServiceForm(forms.ModelForm):
     class Meta:
@@ -131,7 +141,7 @@ class SalaryForm(forms.ModelForm):
 class SalaryAdvanceForm(forms.ModelForm):
     class Meta:
         model = SalaryAdvance
-        fields = '__all__'
+        fields = ['amount', 'reason']
         widgets = {
             'reason': forms.Textarea(attrs={'rows': 3}),
         }
@@ -160,7 +170,7 @@ class TrainingForm(forms.ModelForm):
     class Meta:
         model = Training
         fields = ['title', 'description', 'start_date', 'end_date', 'status', 'employee']
-        
+
 # Formulaire pour la compétence
 class SkillForm(forms.ModelForm):
     class Meta:
@@ -174,10 +184,12 @@ class SkillForm(forms.ModelForm):
 class EmployeeSkillForm(forms.ModelForm):
     class Meta:
         model = EmployeeSkill
-        fields = '__all__'
-        widgets = {
-            'acquired_date': forms.DateInput(attrs={'type': 'date'}),
-        }
+        fields = ['skill', 'level']
+
+class SkillForm(forms.ModelForm):
+    class Meta:
+        model = Skill
+        fields = ['name', 'category', 'description', 'level', 'acquisition_date']
 
 # Formulaire pour l'offre d'emploi
 class JobPostingForm(forms.ModelForm):
@@ -192,7 +204,7 @@ class JobPostingForm(forms.ModelForm):
 class JobApplicationForm(forms.ModelForm):
     class Meta:
         model = JobApplication
-        fields = ['cover_letter', 'cv_file']  # Champs requis pour la candidature
+        fields = ['full_name', 'address', 'phone', 'skills', 'cover_letter', 'cv_file']
         widgets = {
             'cover_letter': forms.Textarea(attrs={'rows': 3}),
             'cv_file': forms.FileInput(attrs={'accept': '.pdf,.doc,.docx'}),
@@ -236,7 +248,7 @@ class PayslipForm(forms.ModelForm):
 class BonusForm(forms.ModelForm):
     class Meta:
         model = Bonus
-        fields = ['employee', 'amount', 'reason']
+        fields = ['type', 'amount', 'reason']
         widgets = {
             'reason': forms.Textarea(attrs={'rows': 3}),
         }

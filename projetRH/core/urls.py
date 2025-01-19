@@ -1,4 +1,3 @@
-# core/urls.py
 from django.urls import path, include
 from django.views.generic import RedirectView
 from rest_framework.routers import DefaultRouter
@@ -7,18 +6,22 @@ from .views import (
     ServiceViewSet, EmployeeViewSet, ContractViewSet,
     LeaveViewSet, SalaryViewSet, EvaluationViewSet,
     JobPostingViewSet, JobApplicationViewSet, FavoriteViewSet,
-    DashboardViewSet, TrainingViewSet, EmployeeSkillViewSet, SkillViewSet, add_training_for_employee, apply_job, candidate_signup, carry_over_leave, customize_favorites, delete_salary, delete_training_for_employee, edit_salary, edit_training_for_employee, generate_performance_report_pdf, leave_balance,
-    login_view, manage_dashboard, manage_employees, add_employee, edit_employee, delete_employee,
-    manage_services, add_service, edit_service, delete_service, manage_trainings_for_employee, print_services,
-    manage_contracts, add_contract, edit_contract, delete_contract, archive_contract,
-    manage_leaves, record_attendance, request_leave, approve_leave, reject_leave,
-    manage_salaries, generate_salary, generate_payslip, add_bonus,
-    manage_evaluations, add_evaluation, edit_evaluation, generate_evaluation_report, generate_evaluation_report_pdf,
-    manage_recruitment, post_job, request_salary_advance, schedule_interview,
-    manage_favorites, add_favorite, edit_favorite, remove_favorite,
-    manage_trainings, manage_skills, manage_employee_skills, grant_permissions,
-    print_employees, employee_detail, custom_logout, add_evaluation_without_employee, verify_email,
-    view_applications, update_application_status, job_posting_detail
+    DashboardViewSet, TrainingViewSet, EmployeeSkillViewSet, SkillViewSet, 
+    add_training_for_employee, apply_job, candidate_signup, carry_over_leave, 
+    customize_favorites, delete_employee_skill, delete_salary, delete_training_for_employee, 
+    edit_employee_skill, edit_salary, edit_training_for_employee, generate_performance_report_pdf, 
+    leave_balance, login_view, manage_dashboard, manage_employees, add_employee, edit_employee, 
+    delete_employee, manage_services, add_service, edit_service, delete_service, 
+    manage_trainings_for_employee, print_services, manage_contracts, add_contract, 
+    edit_contract, delete_contract, archive_contract, manage_leaves, record_attendance, 
+    request_leave, approve_leave, reject_leave, manage_salaries, generate_salary, 
+    generate_payslip, add_bonus, manage_evaluations, add_evaluation, edit_evaluation, 
+    generate_evaluation_report, generate_evaluation_report_pdf, manage_recruitment, 
+    post_job, request_salary_advance, schedule_interview, manage_favorites, add_favorite, 
+    edit_favorite, remove_favorite, manage_trainings, manage_skills, add_skill, edit_skill, 
+    delete_skill, manage_employee_skills, grant_permissions, print_employees, employee_detail, 
+    custom_logout, add_evaluation_without_employee, verify_email, view_applications, 
+    update_application_status, job_posting_detail
 )
 
 # Configuration du router pour l'API
@@ -33,28 +36,53 @@ router.register(r'job-postings', JobPostingViewSet)
 router.register(r'job-applications', JobApplicationViewSet)
 router.register(r'favorites', FavoriteViewSet, basename='favorite')
 router.register(r'dashboard', DashboardViewSet, basename='dashboard')
-router.register(r'formations', TrainingViewSet)  
+router.register(r'formations', TrainingViewSet)
 router.register(r'skills', SkillViewSet)
 router.register(r'employee-skills', EmployeeSkillViewSet)
 
 # Routes pour l'interface utilisateur
 ui_urlpatterns = [
+    # Page d'accueil (redirige vers le tableau de bord)
     path('', RedirectView.as_view(pattern_name='manage_dashboard'), name='home'),
+
+    # Tableau de bord
     path('dashboard/', manage_dashboard, name='manage_dashboard'),
+
+    # Gestion des employés
     path('employees/', manage_employees, name='manage_employees'),
     path('employees/print/', print_employees, name='print_employees'),
     path('employee/<int:employee_id>/', employee_detail, name='employee_detail'),
+
+    # Gestion des services
     path('services/', manage_services, name='manage_services'),
     path('services/print/', print_services, name='print_services'),
+
+    # Gestion des contrats
     path('contracts/', manage_contracts, name='manage_contracts'),
+
+    # Gestion des congés
     path('leaves/', manage_leaves, name='manage_leaves'),
+
+    # Gestion des salaires
     path('salaries/', manage_salaries, name='manage_salaries'),
+
+    # Gestion des évaluations
     path('evaluations/', manage_evaluations, name='manage_evaluations'),
+
+    # Gestion du recrutement
     path('recruitment/', manage_recruitment, name='manage_recruitment'),
+
+    # Gestion des favoris
     path('favorites/', manage_favorites, name='manage_favorites'),
-    path('trainings/', manage_trainings, name='manage_trainings'),  # Liste des formations
+
+    # Gestion des formations
+    path('trainings/', manage_trainings, name='manage_trainings'),
+
+    # Gestion des compétences
     path('skills/', manage_skills, name='manage_skills'),
     path('employee-skills/', manage_employee_skills, name='manage_employee_skills'),
+
+    # Gestion des permissions
     path('grant-permissions/', grant_permissions, name='grant_permissions'),
 ]
 
@@ -68,7 +96,6 @@ functional_urlpatterns = [
     path('add-employee/', add_employee, name='add_employee'),
     path('edit-employee/<int:employee_id>/', edit_employee, name='edit_employee'),
     path('delete-employee/<int:employee_id>/', delete_employee, name='delete_employee'),
-    path('employees/print/', print_employees, name='print_employees'),
     path('employee/<int:employee_id>/generate-performance-report/', generate_performance_report_pdf, name='generate_performance_report_pdf'),
 
     # Services
@@ -120,11 +147,18 @@ functional_urlpatterns = [
     path('customize-favorites/', customize_favorites, name='customize_favorites'),
 
     # Formations
-    path('formations/', manage_trainings, name='manage_trainings'),  # Liste des formations
-    path('employee/<int:employee_id>/trainings/', manage_trainings_for_employee, name='manage_trainings_for_employee'),  # Formations d'un employé spécifique
+    path('employee/<int:employee_id>/trainings/', manage_trainings_for_employee, name='manage_trainings_for_employee'),
     path('employee/<int:employee_id>/add_training/', add_training_for_employee, name='add_training_for_employee'),
     path('training/<int:training_id>/edit/', edit_training_for_employee, name='edit_training_for_employee'),
     path('training/<int:training_id>/delete/', delete_training_for_employee, name='delete_training_for_employee'),
+
+    # Compétences
+    path('skills/add/', add_skill, name='add_skill'),
+    path('skills/edit/<int:skill_id>/', edit_skill, name='edit_skill'),
+    path('skills/delete/<int:skill_id>/', delete_skill, name='delete_skill'),
+    path('employee/<int:employee_id>/skills/', manage_employee_skills, name='manage_employee_skills'),
+    path('employee/skill/<int:skill_id>/edit/', edit_employee_skill, name='edit_employee_skill'),
+    path('employee/skill/<int:skill_id>/delete/', delete_employee_skill, name='delete_employee_skill'),
 ]
 
 # Routes pour l'API

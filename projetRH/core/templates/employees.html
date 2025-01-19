@@ -8,13 +8,13 @@
 <form method="get" class="mb-4">
     <div class="form-row">
         <div class="col-md-6 mb-3">
-            <input type="text" name="q" class="form-control" placeholder="Rechercher un employé..." value="{{ request.GET.q }}">
+            <input type="text" name="q" class="form-control" placeholder="Rechercher un employé..." value="{{ query }}">
         </div>
         <div class="col-md-4 mb-3">
             <select name="service" class="form-control">
                 <option value="">Tous les services</option>
                 {% for service in services %}
-                    <option value="{{ service.id }}" {% if request.GET.service == service.id|stringformat:"s" %}selected{% endif %}>
+                    <option value="{{ service.id }}" {% if service_filter == service.id|stringformat:"s" %}selected{% endif %}>
                         {{ service.description }}
                     </option>
                 {% endfor %}
@@ -69,13 +69,13 @@
     </tbody>
 </table>
 
-<!-- Pagination (si nécessaire) -->
+<!-- Pagination -->
 {% if employees.has_other_pages %}
 <nav aria-label="Page navigation">
     <ul class="pagination">
         {% if employees.has_previous %}
         <li class="page-item">
-            <a class="page-link" href="?page={{ employees.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.service %}&service={{ request.GET.service }}{% endif %}" aria-label="Précédent">
+            <a class="page-link" href="?page={{ employees.previous_page_number }}{% if query %}&q={{ query }}{% endif %}{% if service_filter %}&service={{ service_filter }}{% endif %}" aria-label="Précédent">
                 <span aria-hidden="true">&laquo;</span>
             </a>
         </li>
@@ -87,13 +87,13 @@
 
         {% for i in employees.paginator.page_range %}
         <li class="page-item {% if employees.number == i %}active{% endif %}">
-            <a class="page-link" href="?page={{ i }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.service %}&service={{ request.GET.service }}{% endif %}">{{ i }}</a>
+            <a class="page-link" href="?page={{ i }}{% if query %}&q={{ query }}{% endif %}{% if service_filter %}&service={{ service_filter }}{% endif %}">{{ i }}</a>
         </li>
         {% endfor %}
 
         {% if employees.has_next %}
         <li class="page-item">
-            <a class="page-link" href="?page={{ employees.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.service %}&service={{ request.GET.service }}{% endif %}" aria-label="Suivant">
+            <a class="page-link" href="?page={{ employees.next_page_number }}{% if query %}&q={{ query }}{% endif %}{% if service_filter %}&service={{ service_filter }}{% endif %}" aria-label="Suivant">
                 <span aria-hidden="true">&raquo;</span>
             </a>
         </li>
@@ -109,10 +109,5 @@
 <!-- Bouton pour ajouter un employé -->
 <a href="{% url 'add_employee' %}" class="btn btn-primary">
     <i class="fas fa-plus"></i> Ajouter un Employé
-</a>
-
-<!-- Bouton pour imprimer la liste des employés -->
-<a href="{% url 'print_employees' %}" class="btn btn-secondary ml-2">
-    <i class="fas fa-print"></i> Imprimer la liste
 </a>
 {% endblock %}

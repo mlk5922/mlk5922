@@ -1,4 +1,119 @@
-/* core/static/css/style.css*/
+/* Modern animated background */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(
+        125deg,
+        #FF6B6B,
+        #4ECDC4,
+        #45B7D1,
+        #6C5CE7,
+        #A8E6CF
+    );
+    background-size: 300% 300%;
+    animation: gradientShift 15s ease infinite;
+    min-height: 100vh;
+    color: white;
+}
+
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* Modern animated sidebar */
+.sidebar {
+    width: 250px;
+    color: white;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    transition: all 0.3s ease;
+    overflow-y: auto;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(12px);
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
+    animation: sidebarGlow 8s ease infinite;
+}
+
+@keyframes sidebarGlow {
+    0% {
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+    }
+    50% {
+        box-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
+    }
+    100% {
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+    }
+}
+
+/* Enhanced sidebar elements */
+.sidebar-nav .nav-link {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    margin: 8px 15px;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.sidebar-nav .nav-link:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateX(5px) scale(1.02);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar-nav .nav-link.active {
+    background: linear-gradient(
+        45deg,
+        rgba(255, 255, 255, 0.2),
+        rgba(255, 255, 255, 0.3)
+    );
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
+}
+
+/* Smooth collapse animation */
+.sidebar.collapsed {
+    width: 60px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Enhanced header */
+.sidebar-header {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 20px;
+}
+
+/* Logo glow effect */
+.sidebar-header .logo {
+    animation: logoGlow 4s ease infinite;
+}
+
+@keyframes logoGlow {
+    0% {
+        filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.6));
+    }
+    50% {
+        filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.8));
+    }
+    100% {
+        filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.6));
+    }
+}
+
 /* General Styles */
 body {
     font-family: 'Arial', sans-serif;
@@ -14,6 +129,7 @@ body {
     background-size: 400% 400%;
     animation: gradientBG 15s ease infinite;
     min-height: 100vh;
+    color: white;
 }
 
 @keyframes gradientBG {
@@ -28,12 +144,13 @@ body {
     }
 }
 
+/* App Container */
 .app-container {
     display: flex;
     min-height: 100vh;
 }
 
-/* Sidebar avec animation de fond */
+/* Sidebar */
 .sidebar {
     width: 250px;
     color: white;
@@ -52,72 +169,47 @@ body {
     );
     background-size: 400% 400%;
     animation: gradientBG 15s ease infinite;
-}
-
-/* Ajustement des éléments de la sidebar pour meilleure lisibilité */
-.sidebar-nav .nav-link {
-    background-color: rgba(255, 255, 255, 0.1);
-    margin: 5px 15px;
-    border-radius: 8px;
     backdrop-filter: blur(10px);
-    transition: all 0.3s ease;
-}
-
-.sidebar-nav .nav-link:hover {
-    background-color: rgba(255, 255, 255, 0.2);
-    transform: translateX(5px);
-}
-
-.sidebar-nav .nav-link.active {
-    background-color: rgba(26, 188, 156, 0.7);
-    box-shadow: 0 4px 15px rgba(26, 188, 156, 0.3);
-}
-
-.sidebar-header {
-    background-color: rgba(0, 0, 0, 0.2);
-    backdrop-filter: blur(10px);
-}
-
-/* Modification du style de la scrollbar pour mieux s'intégrer */
-.sidebar::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.1);
-}
-
-.sidebar::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.3);
-    backdrop-filter: blur(10px);
-}
-
-.sidebar::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.4);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .sidebar.collapsed {
     width: 60px;
 }
 
-/* Styles pour le header de la barre latérale */
 .sidebar-header {
     padding: 20px;
-    display: flex; /* Aligner le logo et le texte sur la même ligne */
-    align-items: center; /* Centrer verticalement */
-    gap: 10px; /* Espace entre le logo et le texte */
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Styles pour le logo */
 .sidebar-header .logo {
-    width: 50px; 
-    height: 50px; 
-    border-radius: 50%; /* Rendre le logo circulaire */
-    object-fit: cover; 
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
 }
 
-/* Styles pour le texte "Gestion RH" */
 .sidebar-header h1 {
-    margin: 0; /* Supprimer la marge par défaut */
-    font-size: 1.2rem; /* Réduire la taille du texte */
-    color: white; /* Couleur du texte */
-    font-weight: 600; /* Poids de la police */
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: white;
+}
+
+.toggle-sidebar {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 10px;
 }
 
 .sidebar-nav {
@@ -140,7 +232,11 @@ body {
     padding: 10px 20px;
     color: white;
     text-decoration: none;
-    transition: background-color 0.3s;
+    transition: all 0.3s ease;
+    background-color: rgba(255, 255, 255, 0.1);
+    margin: 5px 15px;
+    border-radius: 8px;
+    backdrop-filter: blur(10px);
 }
 
 .sidebar-nav .nav-link:hover {
@@ -165,18 +261,7 @@ body {
     display: none;
 }
 
-.toggle-sidebar {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 1.5rem;
-    cursor: pointer;
-    position: absolute;
-    top: 10px;
-    right: 10px;
-}
-
-/* Main Content avec animation de fond */
+/* Main Content */
 .main-content {
     margin-left: 250px;
     flex: 1;
@@ -236,6 +321,79 @@ body {
     font-size: 0.8rem;
     padding: 2px 6px;
     border-radius: 50%;
+}
+
+.notification-dropdown {
+    display: none;
+    position: absolute;
+    top: 40px;
+    right: 0;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    padding: 10px;
+    z-index: 1000;
+    width: 300px;
+}
+
+.notification-dropdown.show {
+    display: block;
+}
+
+.notification-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.notification-header h4 {
+    margin: 0;
+    font-size: 1rem;
+}
+
+.notification-header .mark-all-read {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+
+.notification-list {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.notification-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+    margin-bottom: 5px;
+}
+
+.notification-item.unread {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.notification-item i {
+    margin-right: 10px;
+}
+
+.notification-content {
+    flex: 1;
+}
+
+.notification-content p {
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+.notification-content small {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.8rem;
 }
 
 .user-menu {
@@ -484,4 +642,172 @@ body {
     .sidebar.collapsed + .main-content {
         margin-left: 0;
     }
+}
+
+/* Table Styles */
+.table {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
+    border-radius: 20px;
+    overflow: hidden;
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+    margin: 2rem 0;
+    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+}
+
+/* Table Header */
+.table thead th {
+    background: rgba(255, 255, 255, 0.15);
+    color: #1a1a1a;
+    font-weight: 600;
+    padding: 1.2rem 1rem;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+    border: none;
+}
+
+/* Table Body */
+.table tbody tr {
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+.table tbody td {
+    padding: 1rem;
+    color: #1a1a1a;
+    font-weight: 500;
+    border: none;
+}
+
+/* Action Buttons */
+.btn {
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    border: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0 0.25rem;
+}
+
+.btn-info {
+    background: #3498db;
+    color: white;
+}
+
+.btn-warning {
+    background: #f1c40f;
+    color: white;
+}
+
+.btn-danger {
+    background: #e74c3c;
+    color: white;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Add and Print Buttons */
+.btn-primary {
+    background: #2980b9;
+    color: white;
+    padding: 0.8rem 1.5rem;
+    font-weight: 600;
+}
+
+.btn-secondary {
+    background: #7f8c8d;
+    color: white;
+    padding: 0.8rem 1.5rem;
+    font-weight: 600;
+}
+
+/* Empty State */
+.table tbody tr.empty-state td {
+    text-align: center;
+    padding: 2rem;
+    font-style: italic;
+    color: #4a4a4a;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .table {
+        border-radius: 15px;
+    }
+
+    .btn {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.9rem;
+    }
+}
+
+/* Styles pour le formulaire */
+.form-custom {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.form-custom .form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-custom label {
+    font-weight: 600;
+    color: white;
+    margin-bottom: 0.5rem;
+}
+
+.form-custom input,
+.form-custom textarea,
+.form-custom select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.form-custom input:focus,
+.form-custom textarea:focus,
+.form-custom select:focus {
+    border-color: rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.2);
+    outline: none;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
+}
+
+/* Styles pour le bouton "Enregistrer" */
+.btn-save {
+    background-color: #28a745; /* Vert */
+    border: none;
+    padding: 10px 20px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-save:hover {
+    background-color: #aee0b9; /* Vert plus foncé */
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }

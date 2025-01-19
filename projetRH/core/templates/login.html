@@ -1,30 +1,96 @@
-<!-- core/templates/login.html -->
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connexion</title>
-    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <title>Connexion et Inscription</title>
+    <link href="{% static 'styles.css' %}" rel="stylesheet"> <!-- Lien vers le fichier CSS -->
 </head>
 <body>
-    <div class="login-container">
-        <h1>Sign in</h1>
-        <p>Sign in with your username and password</p>
-        <form method="post" action="{% url 'login' %}">
-            {% csrf_token %}
-            <div class="input-group">
-                <label for="username">Your username</label>
-                <input type="text" id="username" name="username" placeholder="Enter Username" required>
-            </div>
-            <div class="input-group">
-                <label for="password">Your password</label>
-                <input type="password" id="password" name="password" placeholder="Enter Password" required>
+    <div class="auth-container">
+        <div class="glass-card">
+            <!-- Boutons de navigation pour basculer entre Connexion et Inscription -->
+            <div class="nav-buttons">
+                <button id="show-login" class="nav-btn active">Connexion</button>
+                <button id="show-signup" class="nav-btn">Inscription</button>
             </div>
 
-            <button type="submit" class="login-button">Login</button>
-        </form>
+            <!-- Section Connexion -->
+            <div id="login-section" class="auth-form">
+                <h2>Connexion</h2>
+                <form method="post" action="{% url 'login' %}">
+                    {% csrf_token %} <!-- Jeton CSRF pour la sécurité -->
+                    <div class="form-group">
+                        <label>Nom d'utilisateur</label>
+                        <input type="text" name="username" placeholder="Entrez votre nom d'utilisateur" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Mot de passe</label>
+                        <input type="password" name="password" placeholder="Entrez votre mot de passe" required>
+                    </div>
+                    <button type="submit" class="submit-btn">Se connecter</button>
+                </form>
+            </div>
+
+            <!-- Section Inscription -->
+            <div id="signup-section" class="auth-form hidden">
+                <h2>Inscription</h2>
+                <form method="post" action="{% url 'candidate_signup' %}">
+                    {% csrf_token %} <!-- Jeton CSRF pour la sécurité -->
+                    <div class="form-group">
+                        <label>Nom d'utilisateur</label>
+                        <input type="text" name="username" required>
+                        <small>150 caractères maximum. Lettres, chiffres et @/./+/-/_ uniquement.</small>
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Mot de passe</label>
+                        <input type="password" name="password1" required>
+                        <small>Minimum 8 caractères</small>
+                    </div>
+                    <div class="form-group">
+                        <label>Confirmer le mot de passe</label>
+                        <input type="password" name="password2" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Type de compte</label>
+                        <select name="account_type" required class="styled-select">
+                            <option value="candidate">Candidat</option>
+                            <option value="employee">Employé</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="submit-btn">S'inscrire</button>
+                </form>
+            </div>
+        </div>
     </div>
+
+    <!-- Script JavaScript pour basculer entre Connexion et Inscription -->
+    <script>
+        const loginBtn = document.getElementById('show-login');
+        const signupBtn = document.getElementById('show-signup');
+        const loginSection = document.getElementById('login-section');
+        const signupSection = document.getElementById('signup-section');
+
+        // Gestion du clic sur le bouton "Connexion"
+        loginBtn.addEventListener('click', () => {
+            loginSection.classList.remove('hidden');
+            signupSection.classList.add('hidden');
+            loginBtn.classList.add('active');
+            signupBtn.classList.remove('active');
+        });
+
+        // Gestion du clic sur le bouton "Inscription"
+        signupBtn.addEventListener('click', () => {
+            signupSection.classList.remove('hidden');
+            loginSection.classList.add('hidden');
+            signupBtn.classList.add('active');
+            loginBtn.classList.remove('active');
+        });
+    </script>
 </body>
 </html>

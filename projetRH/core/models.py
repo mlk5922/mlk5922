@@ -5,20 +5,86 @@ from django.core.validators import MinValueValidator, MaxValueValidator, FileExt
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 import os
+from django.utils.translation import gettext_lazy as _
 
 # Modèle utilisateur personnalisé
-class User(AbstractUser):
-    email = models.EmailField(unique=True)
-    is_hr = models.BooleanField(default=False)  # Indique si l'utilisateur est un RH
-    is_manager = models.BooleanField(default=False)  # Indique si l'utilisateur est un manager
-    is_employee = models.BooleanField(default=True)  # Indique si l'utilisateur est un employé
-    is_candidate = models.BooleanField(default=False)  # Nouveau champ pour les candidats
-    is_active = models.BooleanField(default=False)  # Désactivé par défaut jusqu'à la confirmation par e-mail
-    verification_code = models.CharField(max_length=6, blank=True, null=True)  # Code de validation
 
+
+class User(AbstractUser):
+    """
+    Modèle utilisateur personnalisé basé sur AbstractUser.
+    Ajoute des champs pour gérer les rôles (RH, manager, employé, candidat),
+    l'activation du compte, et un code de validation pour la confirmation par e-mail.
+    """
+
+    # Champs supplémentaires
+    email = models.EmailField(
+        unique=True,
+        verbose_name="Adresse e-mail",
+        help_text="L'adresse e-mail doit être unique."
+    )
+    is_hr = models.BooleanField(
+        default=False,
+        verbose_name="Est un RH",
+        help_text="Indique si l'utilisateur est un responsable des ressources humaines."
+    )
+    is_manager = models.BooleanField(
+        default=False,
+        verbose_name="Est un manager",
+        help_text="Indique si l'utilisateur est un manager."
+    )
+    is_employee = models.BooleanField(
+        default=True,
+        verbose_name="Est un employé",
+        help_text="Indique si l'utilisateur est un employé."
+    )
+    is_candidate = models.BooleanField(
+        default=False,
+        verbose_name="Est un candidat",
+        help_text="Indique si l'utilisateur est un candidat."
+    )
+    is_active = models.BooleanField(
+        default=False,
+        verbose_name="Compte activé",
+        help_text="Désactivé par défaut jusqu'à la confirmation par e-mail."
+    )
+    verification_code = models.CharField(
+        max_length=6,
+        blank=True,
+        null=True,
+        verbose_name="Code de validation",
+        help_text="Code à 6 chiffres pour la validation du compte par e-mail."
+    )
+
+    # Méthodes et métadonnées
     def __str__(self):
+        """
+        Représentation en chaîne de caractères de l'utilisateur.
+        """
         return self.username
 
+    def clean(self):
+        """
+        Validation personnalisée pour s'assurer qu'un utilisateur ne peut pas être à la fois employé et candidat.
+        """
+        if self.is_employee and self.is_candidate:
+            raise ValidationError(_("Un utilisateur ne peut pas être à la fois employé et candidat."))
+        super().clean()
+
+    def save(self, *args, **kwargs):
+        """
+        Surcharge de la méthode save pour appliquer des règles métier avant la sauvegarde.
+        """
+        self.clean()  # Appliquer la validation avant la sauvegarde
+        super().save(*args, **kwargs)
+
+    class Meta:
+        """
+        Métadonnées pour le modèle User.
+        """
+        verbose_name = "Utilisateur"
+        verbose_name_plural = "Utilisateurs"
+        ordering = ['username']  # Trier par nom d'utilisateur par défaut
 # Modèle de document
 class Document(models.Model):
     title = models.CharField(max_length=255)  # Titre du document
@@ -69,22 +135,22 @@ class Employee(models.Model):
         ('F', 'Féminin'),
         ('O', 'Autre')
     ]
-    gender = models.CharField(max_length=1, choices=GENDER_CHOICES, null=True, blank=True)  # Genre de l'employé
-    user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name="Utilisateur associé")
+    gender = models.CharField(max_length=1, choices=GENDER_CHOICES, null=True, blank=True)
+    user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True, blank=True)
     nom = models.CharField(max_length=255, verbose_name="Nom")
     prenom = models.CharField(max_length=255, verbose_name="Prénom")
     code = models.CharField(max_length=10, unique=True, verbose_name="Code employé")
     birth_date = models.DateField(verbose_name="Date de naissance")
     hire_date = models.DateField(verbose_name="Date d'embauche")
     address = models.TextField(verbose_name="Adresse")
-    phone = models.CharField(max_length=20, null=True, blank=True)  # Téléphone de l'employé
+    phone = models.CharField(max_length=20, null=True, blank=True)
     documents = models.ManyToManyField(Document, blank=True, verbose_name="Documents")
     service = models.ForeignKey(Service, on_delete=models.PROTECT, verbose_name="Service")
     base_salary = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Salaire de base")
     daily_salary = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Salaire journalier", null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Créé le")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Mis à jour le")
-    is_active = models.BooleanField(default=True)  # Indique si l'employé est actif
+    is_active = models.BooleanField(default=True)
 
     def __str__(self):
         return f"{self.prenom} {self.nom} - {self.code}"
@@ -96,18 +162,14 @@ class Contract(models.Model):
         ('CDD', 'Contrat à Durée Déterminée'),
         ('STAGE', 'Stage'),
     ]
-    employee = models.ForeignKey(Employee, on_delete=models.PROTECT)  # Employé associé
-    type = models.CharField(max_length=5, choices=CONTRACT_TYPES)  # Type de contrat
-    start_date = models.DateField()  # Date de début du contrat
-    end_date = models.DateField(null=True, blank=True)  # Date de fin du contrat (optionnelle)
-    monthly_salary = models.DecimalField(max_digits=10, decimal_places=2)  # Salaire mensuel
-    daily_salary = models.DecimalField(max_digits=10, decimal_places=2)  # Salaire journalier
-    is_active = models.BooleanField(default=True)  # Indique si le contrat est actif
-    trial_period_end = models.DateField(null=True, blank=True)  # Fin de la période d'essai
-    archived = models.BooleanField(default=False)  # Indique si le contrat est archivé
-    document = models.ForeignKey(Document, on_delete=models.SET_NULL, null=True)  # Document associé
-    created_at = models.DateTimeField(auto_now_add=True)  # Date de création
-    updated_at = models.DateTimeField(auto_now=True)  # Date de mise à jour
+    employee = models.ForeignKey(Employee, on_delete=models.PROTECT)
+    type = models.CharField(max_length=50, choices=CONTRACT_TYPES)
+    start_date = models.DateField()
+    end_date = models.DateField(null=True, blank=True)
+    monthly_salary = models.DecimalField(max_digits=10, decimal_places=2)
+    daily_salary = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)  # Valeur par défaut
+    is_active = models.BooleanField(default=True)
+    archived = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.employee} - {self.type}"
@@ -284,31 +346,37 @@ class Training(models.Model):
 
 # Modèle de compétence
 class Skill(models.Model):
-    name = models.CharField(max_length=100)  # Nom de la compétence
-    category = models.CharField(max_length=50)  # Catégorie de la compétence
-    description = models.TextField()  # Description de la compétence
-    is_active = models.BooleanField(default=True)  # Indique si la compétence est active
-    created_at = models.DateTimeField(auto_now_add=True)  # Date de création
-    updated_at = models.DateTimeField(auto_now=True)  # Date de mise à jour
+    name = models.CharField(max_length=100)
+    category = models.CharField(max_length=50)
+    description = models.TextField()
+    level = models.CharField(max_length=50, choices=[('Débutant', 'Débutant'), ('Intermédiaire', 'Intermédiaire'), ('Avancé', 'Avancé')], default='Débutant')
+    acquisition_date = models.DateField(default=timezone.now)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.name
 
 # Modèle de compétence d'employé
 class EmployeeSkill(models.Model):
-    employee = models.ForeignKey(Employee, on_delete=models.CASCADE)  # Employé associé
-    skill = models.ForeignKey(Skill, on_delete=models.CASCADE)  # Compétence associée
-    level = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])  # Niveau de compétence
-    acquired_date = models.DateField()  # Date d'acquisition
-    is_verified = models.BooleanField(default=False)  # Indique si la compétence est vérifiée
-    created_at = models.DateTimeField(auto_now_add=True)  # Date de création
-    updated_at = models.DateTimeField(auto_now=True)  # Date de mise à jour
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='employee_skills')
+    skill = models.ForeignKey(Skill, on_delete=models.CASCADE, related_name='skill_employees')
+    level = models.CharField(
+        max_length=50,
+        choices=[('Débutant', 'Débutant'), ('Intermédiaire', 'Intermédiaire'), ('Avancé', 'Avancé')],
+        default='Débutant'
+    )
+    acquisition_date = models.DateField(default=timezone.now)
+    is_verified = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        unique_together = ['employee', 'skill']  # Contrainte d'unicité
+        unique_together = ['employee', 'skill']
 
     def __str__(self):
-        return f"{self.employee} - {self.skill}"
+        return f"{self.employee} - {self.skill} (Niveau: {self.level})"
 
 # Modèle d'offre d'emploi
 class JobPosting(models.Model):
@@ -333,19 +401,23 @@ class JobApplication(models.Model):
         ('REJECTED', 'Rejetée'),
         ('ACCEPTED', 'Acceptée'),
     ]
-    job_posting = models.ForeignKey(JobPosting, on_delete=models.PROTECT)  # Offre d'emploi associée
-    candidate = models.ForeignKey(User, on_delete=models.PROTECT)  # Candidat
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='RECEIVED')  # Statut de la candidature
-    cv_file = models.FileField(upload_to='cvs/')  # Fichier CV
-    cover_letter = models.TextField()  # Lettre de motivation
-    interview_date = models.DateTimeField(null=True, blank=True)  # Date de l'entretien
-    is_selected = models.BooleanField(default=False)  # Indique si le candidat est sélectionné
-    created_at = models.DateTimeField(auto_now_add=True)  # Date de création
-    updated_at = models.DateTimeField(auto_now=True)  # Date de mise à jour
+    job_posting = models.ForeignKey(JobPosting, on_delete=models.PROTECT)
+    candidate = models.ForeignKey(User, on_delete=models.PROTECT)
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='RECEIVED')
+    cv_file = models.FileField(upload_to='cvs/')
+    cover_letter = models.TextField()
+    interview_date = models.DateTimeField(null=True, blank=True)
+    is_selected = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    full_name = models.CharField(max_length=255, default='Non spécifié')  # Valeur par défaut
+    address = models.TextField(default='Non spécifiée')  # Valeur par défaut
+    phone = models.CharField(max_length=20, default='Non spécifié')  # Valeur par défaut
+    skills = models.TextField(default='Non spécifié')  # Valeur par défaut
 
     def __str__(self):
         return f"{self.candidate} - {self.job_posting}"
-
+    
 # Modèle de favori
 class Favorite(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Utilisateur")
@@ -405,29 +477,46 @@ class Notification(models.Model):
 
 # Modèle de fiche de paie
 class Payslip(models.Model):
-    employee = models.ForeignKey(Employee, on_delete=models.CASCADE)  # Employé associé
-    month = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(12)])  # Mois de la fiche de paie
-    year = models.IntegerField()  # Année de la fiche de paie
-    base_salary = models.DecimalField(max_digits=10, decimal_places=2)  # Salaire de base
-    bonuses = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # Bonus
-    deductions = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # Déductions
-    net_salary = models.DecimalField(max_digits=10, decimal_places=2)  # Salaire net
-    is_paid = models.BooleanField(default=False)  # Indique si la fiche de paie est payée
-    created_at = models.DateTimeField(auto_now_add=True)  # Date de création
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE, verbose_name="Employé")
+    month = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(12)], verbose_name="Mois")
+    year = models.IntegerField(verbose_name="Année")
+    base_salary = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Salaire de base")
+    bonuses = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="Bonus")
+    deductions = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="Déductions")
+    net_salary = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Salaire net")
+    is_paid = models.BooleanField(default=False, verbose_name="Payé")
+    pdf_file = models.FileField(upload_to='payslips/', null=True, blank=True, verbose_name="Fichier PDF")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Date de création")
 
     def __str__(self):
         return f"Fiche de paie de {self.employee} - {self.month}/{self.year}"
 
+    class Meta:
+        verbose_name = "Fiche de paie"
+        verbose_name_plural = "Fiches de paie"
+
 # Modèle de prime
 class Bonus(models.Model):
-    employee = models.ForeignKey(Employee, on_delete=models.CASCADE)  # Employé associé
-    amount = models.DecimalField(max_digits=10, decimal_places=2)  # Montant de la prime
-    reason = models.TextField()  # Raison de la prime
-    date = models.DateField(auto_now_add=True)  # Date de la prime
-    is_approved = models.BooleanField(default=False)  # Indique si la prime est approuvée
+    BONUS_TYPES = [
+        ('PERFORMANCE', 'Prime de performance'),
+        ('RETENTION', 'Prime de fidélité'),
+        ('SPECIAL', 'Prime exceptionnelle'),
+        ('OTHER', 'Autre'),
+    ]
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE, verbose_name="Employé")
+    type = models.CharField(max_length=20, choices=BONUS_TYPES, default='PERFORMANCE', verbose_name="Type de prime")
+    amount = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Montant")
+    reason = models.TextField(verbose_name="Raison")
+    date = models.DateField(auto_now_add=True, verbose_name="Date")
+    is_approved = models.BooleanField(default=False, verbose_name="Approuvé")
+    is_paid = models.BooleanField(default=False, verbose_name="Payé")
 
     def __str__(self):
-        return f"Prime de {self.employee} - {self.amount}"
+        return f"{self.get_type_display()} - {self.employee} - {self.amount}"
+
+    class Meta:
+        verbose_name = "Prime"
+        verbose_name_plural = "Primes"
 
 # Modèle pour gérer les entretiens
 class Interview(models.Model):

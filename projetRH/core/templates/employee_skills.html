@@ -1,25 +1,35 @@
-<!-- templates/employee-skills.html -->
-
+<!-- core/templates/employee_skills.html -->
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Compétences des Employés</h1>
+<h1>Compétences de {{ employee.nom }} {{ employee.prenom }}</h1>
+
 <table class="table">
     <thead>
         <tr>
-            <th>Employé</th>
             <th>Compétence</th>
             <th>Niveau</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
-        {% for employee_skill in employee_skills %}
+        {% for skill in skills %}
         <tr>
-            <td>{{ employee_skill.employee }}</td>
-            <td>{{ employee_skill.skill }}</td>
-            <td>{{ employee_skill.level }}</td>
+            <td>{{ skill.skill.name }}</td>
+            <td>{{ skill.level }}</td>
+            <td>
+                <a href="{% url 'edit_employee_skill' skill.id %}" class="btn btn-warning btn-sm">Modifier</a>
+                <a href="{% url 'delete_employee_skill' skill.id %}" class="btn btn-danger btn-sm">Supprimer</a>
+            </td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
+
+<h2>Ajouter une compétence</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Ajouter</button>
+</form>
 {% endblock %}

@@ -2,13 +2,68 @@
 {% extends 'base.html' %}
 {% load static %}
 
-
-
 {% block content %}
-<h1>Ajouter un Contrat</h1>
+<h1 class="mb-4">Ajouter un Contrat</h1>
 <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-success">Enregistrer</button>
+    
+    <!-- Section Employé -->
+    <div class="mb-3">
+        <label for="employee" class="form-label">Employé</label>
+        <select class="form-select" id="employee" name="employee" required>
+            <option value="">Sélectionnez un employé</option>
+            {% for employee in employees %}
+                <option value="{{ employee.id }}">{{ employee.nom }} {{ employee.prenom }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <!-- Section Type de Contrat -->
+    <div class="mb-3">
+        <label for="contract_type" class="form-label">Type de Contrat</label>
+        <select class="form-select" id="contract_type" name="contract_type" required>
+            <option value="">Sélectionnez un type de contrat</option>
+            <option value="CDI">CDI</option>
+            <option value="CDD">CDD</option>
+            <option value="Stage">Stage</option>
+            <option value="Freelance">Freelance</option>
+        </select>
+    </div>
+
+    <!-- Section Date de Début -->
+    <div class="mb-3">
+        <label for="start_date" class="form-label">Date de Début</label>
+        <input type="date" class="form-control" id="start_date" name="start_date" required>
+    </div>
+
+    <!-- Section Date de Fin -->
+    <div class="mb-3">
+        <label for="end_date" class="form-label">Date de Fin</label>
+        <input type="date" class="form-control" id="end_date" name="end_date">
+    </div>
+
+    <!-- Section Salaire Mensuel -->
+    <div class="mb-3">
+        <label for="monthly_salary" class="form-label">Salaire Mensuel</label>
+        <input type="number" class="form-control" id="monthly_salary" name="monthly_salary" required>
+    </div>
+
+    <!-- Section Salaire Journalier -->
+    <div class="mb-3">
+        <label for="daily_salary" class="form-label">Salaire Journalier</label>
+        <input type="number" class="form-control" id="daily_salary" name="daily_salary" required>
+    </div>
+
+    <!-- Section Statut du Contrat -->
+    <div class="mb-3">
+        <label for="is_active" class="form-label">Statut du Contrat</label>
+        <select class="form-select" id="is_active" name="is_active" required>
+            <option value="True">Actif</option>
+            <option value="False">Inactif</option>
+        </select>
+    </div>
+
+    <!-- Bouton de soumission -->
+    <button type="submit" class="btn btn-primary">Enregistrer</button>
 </form>
 {% endblock %}

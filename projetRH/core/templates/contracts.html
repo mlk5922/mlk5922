@@ -1,34 +1,114 @@
-<!-- templates/contracts.html -->
-{% extends 'base.html' %} 
+{% extends 'base.html' %}
 {% load static %}
-
 
 {% block content %}
 <h1>Liste des Contrats</h1>
-<a href="{% url 'add_contract' %}" class="btn btn-primary mb-3">Ajouter un Contrat</a>
-<table class="table">
+
+<!-- Lien pour ajouter un nouveau contrat -->
+<a href="{% url 'add_contract' %}" class="btn btn-primary mb-3 btn-custom btn-add">
+    <i class="fas fa-plus"></i> Ajouter un Contrat
+</a>
+
+<!-- Formulaire de recherche et de filtrage -->
+<form method="get" action="{% url 'manage_contracts' %}" class="mb-4">
+    <div class="form-row">
+        <div class="form-group col-md-4">
+            <input type="text" name="q" class="form-control" placeholder="Rechercher par nom ou prénom" value="{{ query }}">
+        </div>
+        <div class="form-group col-md-3">
+            <select name="contract_type" class="form-control">
+                <option value="">Tous les types</option>
+                {% for type in contract_types %}
+                <option value="{{ type.0 }}" {% if contract_type_filter == type.0 %}selected{% endif %}>{{ type.1 }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group col-md-3">
+            <select name="archived" class="form-control">
+                <option value="">Tous</option>
+                <option value="true" {% if archived_filter == 'true' %}selected{% endif %}>Archivés</option>
+                <option value="false" {% if archived_filter == 'false' %}selected{% endif %}>Non archivés</option>
+            </select>
+        </div>
+        <div class="form-group col-md-2">
+            <button type="submit" class="btn btn-secondary btn-custom">Filtrer</button>
+        </div>
+    </div>
+</form>
+
+<!-- Tableau des contrats -->
+<table class="table table-striped">
     <thead>
         <tr>
             <th>Employé</th>
             <th>Type</th>
             <th>Date de Début</th>
             <th>Date de Fin</th>
+            <th>Archivé</th>
+            <th>Actif</th>
             <th>Actions</th>
         </tr>
     </thead>
     <tbody>
         {% for contract in contracts %}
         <tr>
-            <td>{{ contract.employee }}</td>
-            <td>{{ contract.type }}</td>
+            <td>{{ contract.employee.nom }} {{ contract.employee.prenom }}</td>
+            <td>{{ contract.get_type_display }}</td>
             <td>{{ contract.start_date }}</td>
             <td>{{ contract.end_date }}</td>
+            <td>{% if contract.archived %}Oui{% else %}Non{% endif %}</td>
+            <td>{% if contract.is_active %}Oui{% else %}Non{% endif %}</td>
             <td>
-                <a href="{% url 'edit_contract' contract.id %}" class="btn btn-warning btn-sm">Modifier</a>
-                <a href="{% url 'delete_contract' contract.id %}" class="btn btn-danger btn-sm">Supprimer</a>
+                <a href="{% url 'edit_contract' contract.id %}" class="btn btn-warning btn-sm btn-custom btn-edit">
+                    <i class="fas fa-edit"></i> Modifier
+                </a>
+                <a href="{% url 'delete_contract' contract.id %}" class="btn btn-danger btn-sm btn-custom btn-delete">
+                    <i class="fas fa-trash"></i> Supprimer
+                </a>
             </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="7" class="text-center">Aucun contrat trouvé.</td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
+
+<!-- Pagination -->
+<nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+        {% if contracts.has_previous %}
+        <li class="page-item">
+            <a class="page-link btn-custom" href="?page=1" aria-label="Première">
+                <span aria-hidden="true">&laquo;&laquo;</span>
+            </a>
+        </li>
+        <li class="page-item">
+            <a class="page-link btn-custom" href="?page={{ contracts.previous_page_number }}" aria-label="Précédente">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        {% endif %}
+
+        <li class="page-item disabled">
+            <span class="page-link">
+                Page {{ contracts.number }} sur {{ contracts.paginator.num_pages }}
+            </span>
+        </li>
+
+        {% if contracts.has_next %}
+        <li class="page-item">
+            <a class="page-link btn-custom" href="?page={{ contracts.next_page_number }}" aria-label="Suivante">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+        <li class="page-item">
+            <a class="page-link btn-custom" href="?page={{ contracts.paginator.num_pages }}" aria-label="Dernière">
+                <span aria-hidden="true">&raquo;&raquo;</span>
+            </a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
 {% endblock %}

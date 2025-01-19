@@ -1,4 +1,3 @@
-# projetRH/settings.py
 from pathlib import Path
 import os
 from datetime import timedelta
@@ -13,7 +12,7 @@ SECRET_KEY = 'django-insecure-e1zb4i*9y*m0x#&k&3$*xjiwcy(rvji!c0g0=2h34p(-xx9!yl
 DEBUG = True
 
 # Liste des hôtes autorisés (à configurer en production)
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']  # Autoriser tous les hôtes en développement (à restreindre en production)
 
 # Applications installées
 INSTALLED_APPS = [
@@ -160,6 +159,42 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'  # Utiliser SMTP p
 EMAIL_HOST = 'smtp.gmail.com'  # Serveur SMTP de Gmail
 EMAIL_PORT = 587  # Port SMTP pour TLS
 EMAIL_USE_TLS = True  # Activer TLS pour la sécurité
-EMAIL_HOST_USER = 'votre_email@gmail.com'  # Votre adresse e-mail
-EMAIL_HOST_PASSWORD = 'votre_mot_de_passe'  # Votre mot de passe
-DEFAULT_FROM_EMAIL = 'votre_email@gmail.com'  # Adresse e-mail par défaut pour l'envoi
+EMAIL_HOST_USER = 'nour.bezzazi02@gmail.com'  # Votre adresse e-mail
+EMAIL_HOST_PASSWORD = 'Django App'  # Votre mot de passe ou mot de passe d'application
+DEFAULT_FROM_EMAIL = 'nour.bezzazi02@gmail.com'  # Adresse e-mail par défaut pour l'envoi
+
+# Configuration des logs
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO',
+    },
+}
+
+# Configuration pour les fichiers uploadés (taille maximale)
+DATA_UPLOAD_MAX_MEMORY_SIZE = 10485760  # 10 Mo
+FILE_UPLOAD_MAX_MEMORY_SIZE = 10485760  # 10 Mo
+
+# Configuration pour les sessions
+SESSION_COOKIE_AGE = 1209600  # Durée de vie des sessions en secondes (2 semaines)
+SESSION_SAVE_EVERY_REQUEST = True  # Sauvegarder la session à chaque requête
+
+# Configuration pour les cookies CSRF
+CSRF_COOKIE_SECURE = False  # À activer en production (True) si HTTPS est utilisé
+CSRF_COOKIE_HTTPONLY = True  # Empêcher l'accès au cookie CSRF via JavaScript
+
+# Configuration pour les cookies de session
+SESSION_COOKIE_SECURE = False  # À activer en production (True) si HTTPS est utilisé
+SESSION_COOKIE_HTTPONLY = True  # Empêcher l'accès au cookie de session via JavaScript
+
+# Configuration pour les fichiers statiques en production (exemple avec WhiteNoise)
+if not DEBUG:
+    MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'

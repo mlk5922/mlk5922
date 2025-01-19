@@ -1,11 +1,68 @@
 <!-- core/templates/post_job.html -->
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
-<h1>Poster une nouvelle offre d'emploi</h1>
+<h1 class="mb-4">Poster une nouvelle offre d'emploi</h1>
+
 <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-success">Poster</button>
+    
+    <!-- Section Titre de l'offre -->
+    <div class="mb-3">
+        <label for="title" class="form-label">Titre de l'offre</label>
+        <input type="text" class="form-control" id="title" name="title" required>
+    </div>
+
+    <!-- Section Description -->
+    <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        <textarea class="form-control" id="description" name="description" rows="5" required></textarea>
+    </div>
+
+    <!-- Section Type de contrat -->
+    <div class="mb-3">
+        <label for="contract_type" class="form-label">Type de contrat</label>
+        <select class="form-select" id="contract_type" name="contract_type" required>
+            <option value="">Sélectionnez un type de contrat</option>
+            <option value="CDI">CDI</option>
+            <option value="CDD">CDD</option>
+            <option value="Stage">Stage</option>
+            <option value="Freelance">Freelance</option>
+        </select>
+    </div>
+
+    <!-- Section Localisation -->
+    <div class="mb-3">
+        <label for="location" class="form-label">Localisation</label>
+        <input type="text" class="form-control" id="location" name="location" required>
+    </div>
+
+    <!-- Section Salaire -->
+    <div class="mb-3">
+        <label for="salary" class="form-label">Salaire</label>
+        <input type="text" class="form-control" id="salary" name="salary">
+    </div>
+
+    <!-- Section Compétences requises -->
+    <div class="mb-3">
+        <label for="required_skills" class="form-label">Compétences requises</label>
+        <textarea class="form-control" id="required_skills" name="required_skills" rows="3"></textarea>
+    </div>
+
+    <!-- Section Date de publication -->
+    <div class="mb-3">
+        <label for="publication_date" class="form-label">Date de publication</label>
+        <input type="date" class="form-control" id="publication_date" name="publication_date" required>
+    </div>
+
+    <!-- Section Date d'expiration -->
+    <div class="mb-3">
+        <label for="expiration_date" class="form-label">Date d'expiration</label>
+        <input type="date" class="form-control" id="expiration_date" name="expiration_date" required>
+    </div>
+
+    <!-- Bouton de soumission -->
+    <button type="submit" class="btn btn-primary">Poster</button>
 </form>
 {% endblock %}

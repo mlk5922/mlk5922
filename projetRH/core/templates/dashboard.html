@@ -1,6 +1,5 @@
-<!-- dashboard.html -->
-
 {% extends 'base.html' %}
+
 {% block content %}
 <div class="dashboard-container">
     <!-- Résumé des statistiques en haut -->
@@ -89,6 +88,56 @@
             </div>
             <div class="card-body">
                 {{ performance_fig|safe }}
+            </div>
+        </div>
+
+        <!-- Absences -->
+        <div class="dashboard-card">
+            <div class="card-header">
+                <h2><i class="fas fa-calendar-times"></i> Répartition des Congés</h2>
+            </div>
+            <div class="card-body">
+                {{ absence_fig|safe }}
+            </div>
+        </div>
+
+        <!-- Salaires par service -->
+        <div class="dashboard-card">
+            <div class="card-header">
+                <h2><i class="fas fa-coins"></i> Salaires par Service</h2>
+            </div>
+            <div class="card-body">
+                {{ salary_fig|safe }}
+            </div>
+        </div>
+
+        <!-- Pics d'absences -->
+        <div class="dashboard-card">
+            <div class="card-header">
+                <h2><i class="fas fa-exclamation-triangle"></i> Pics d'Absences</h2>
+            </div>
+            <div class="card-body">
+                {{ absence_peaks_fig|safe }}
+            </div>
+        </div>
+
+        <!-- Évolution des recrutements -->
+        <div class="dashboard-card">
+            <div class="card-header">
+                <h2><i class="fas fa-user-plus"></i> Évolution des Recrutements</h2>
+            </div>
+            <div class="card-body">
+                {{ new_hires_fig|safe }}
+            </div>
+        </div>
+
+        <!-- Offres d'emploi publiées -->
+        <div class="dashboard-card">
+            <div class="card-header">
+                <h2><i class="fas fa-briefcase"></i> Offres d'Emploi Publiées</h2>
+            </div>
+            <div class="card-body">
+                {{ job_postings_fig|safe }}
             </div>
         </div>
     </div>

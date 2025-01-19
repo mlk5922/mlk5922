@@ -1,25 +1,117 @@
-<!-- core/templates/apply_job.html -->
 {% extends 'base.html' %}
 
 {% block content %}
 <div class="container">
     <!-- Titre de la page -->
-    <h1>Postuler à l'offre : {{ job_posting.title }}</h1>
+    <h1 class="mt-4 mb-4">Postuler à l'offre : {{ job_posting.title }}</h1>
 
     <!-- Informations sur l'offre -->
-    <p><strong>Type de contrat :</strong> {{ job_posting.get_contract_type_display }}</p>
-    <p><strong>Service :</strong> {{ job_posting.service.description }}</p>
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Détails de l'offre</h5>
+            <p class="card-text"><strong>Type de contrat :</strong> {{ job_posting.get_contract_type_display }}</p>
+            <p class="card-text"><strong>Service :</strong> {{ job_posting.service.description }}</p>
+            <p class="card-text"><strong>Description :</strong> {{ job_posting.description }}</p>
+        </div>
+    </div>
 
     <!-- Formulaire de candidature -->
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <!-- Afficher les champs du formulaire -->
-        {{ form.as_p }}
-        <!-- Bouton de soumission -->
-        <button type="submit" class="btn btn-success">Soumettre ma candidature</button>
-    </form>
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Formulaire de candidature</h5>
+
+            <!-- Afficher les messages d'erreur ou de succès -->
+            {% if messages %}
+                <div class="alert alert-info">
+                    {% for message in messages %}
+                        {{ message }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <!-- Formulaire -->
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <!-- Afficher les erreurs du formulaire -->
+                {% if form.errors %}
+                    <div class="alert alert-danger">
+                        <strong>Erreur :</strong> Veuillez corriger les erreurs ci-dessous.
+                    </div>
+                {% endif %}
+
+                <!-- Afficher les champs du formulaire -->
+                <div class="form-group">
+                    <label for="{{ form.full_name.id_for_label }}">Nom complet</label>
+                    {{ form.full_name }}
+                    {% if form.full_name.errors %}
+                        <div class="text-danger">
+                            {{ form.full_name.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.address.id_for_label }}">Adresse</label>
+                    {{ form.address }}
+                    {% if form.address.errors %}
+                        <div class="text-danger">
+                            {{ form.address.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.phone.id_for_label }}">Téléphone</label>
+                    {{ form.phone }}
+                    {% if form.phone.errors %}
+                        <div class="text-danger">
+                            {{ form.phone.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.skills.id_for_label }}">Compétences</label>
+                    {{ form.skills }}
+                    {% if form.skills.errors %}
+                        <div class="text-danger">
+                            {{ form.skills.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.cover_letter.id_for_label }}">Lettre de motivation</label>
+                    {{ form.cover_letter }}
+                    {% if form.cover_letter.errors %}
+                        <div class="text-danger">
+                            {{ form.cover_letter.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.cv_file.id_for_label }}">CV (PDF, DOC, DOCX)</label>
+                    {{ form.cv_file }}
+                    {% if form.cv_file.errors %}
+                        <div class="text-danger">
+                            {{ form.cv_file.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Bouton de soumission -->
+                <button type="submit" class="btn btn-success">Soumettre ma candidature</button>
+            </form>
+        </div>
+    </div>
 
     <!-- Lien pour revenir à l'offre d'emploi -->
-    <a href="{% url 'job_posting_detail' job_posting.id %}" class="btn btn-secondary mt-3">Retour à l'offre</a>
+    <div class="mt-4">
+        <a href="{% url 'job_posting_detail' job_posting.id %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Retour à l'offre
+        </a>
+    </div>
 </div>
 {% endblock %}

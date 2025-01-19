@@ -1,14 +1,54 @@
 <!-- templates/add_evaluation.html -->
 {% extends 'base.html' %}
-
 {% load static %}
 
-
 {% block content %}
-<h1>Ajouter une Évaluation</h1>
+<h1 class="mb-4">Ajouter une Évaluation</h1>
 <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-success">Enregistrer</button>
+    
+    <!-- Section Employé -->
+    <div class="mb-3">
+        <label for="employee" class="form-label">Employé</label>
+        <select class="form-select" id="employee" name="employee" required>
+            <option value="">Sélectionnez un employé</option>
+            {% for employee in employees %}
+                <option value="{{ employee.id }}">{{ employee.nom }} {{ employee.prenom }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <!-- Section Date d'Évaluation -->
+    <div class="mb-3">
+        <label for="evaluation_date" class="form-label">Date d'Évaluation</label>
+        <input type="date" class="form-control" id="evaluation_date" name="evaluation_date" required>
+    </div>
+
+    <!-- Section Performance -->
+    <div class="mb-3">
+        <label for="performance" class="form-label">Performance</label>
+        <select class="form-select" id="performance" name="performance" required>
+            <option value="">Sélectionnez une performance</option>
+            <option value="Excellent">Excellent</option>
+            <option value="Bon">Bon</option>
+            <option value="Moyen">Moyen</option>
+            <option value="À améliorer">À améliorer</option>
+        </select>
+    </div>
+
+    <!-- Section Commentaires -->
+    <div class="mb-3">
+        <label for="comments" class="form-label">Commentaires</label>
+        <textarea class="form-control" id="comments" name="comments" rows="3"></textarea>
+    </div>
+
+    <!-- Section Objectifs -->
+    <div class="mb-3">
+        <label for="goals" class="form-label">Objectifs</label>
+        <textarea class="form-control" id="goals" name="goals" rows="3"></textarea>
+    </div>
+
+    <!-- Bouton de soumission -->
+    <button type="submit" class="btn btn-primary">Enregistrer</button>
 </form>
 {% endblock %}

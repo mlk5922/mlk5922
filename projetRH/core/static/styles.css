@@ -1,76 +1,222 @@
-/* core/static/styles.css */
-/* General body styles */
-body {
+/* Base styles */
+* {
     margin: 0;
-    font-family: 'Arial', sans-serif;
-    background: linear-gradient(135deg, #6f86d6, #48c6ef);
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Modification du background avec animation moderne */
+body {
+    min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-}
-
-/* Container for the login card */
-.login-container {
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(15px);
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(
+        125deg,
+        #FF6B6B,
+        #4ECDC4,
+        #45B7D1,
+        #6C5CE7,
+        #A8E6CF
+    );
+    background-size: 300% 300%;
+    animation: gradientShift 15s ease infinite;
     padding: 20px;
+}
+
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* Container principal */
+.auth-container {
+    width: 100%;
+    max-width: 400px;
+}
+
+/* Carte avec effet verre */
+.glass-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
     border-radius: 20px;
-    width: 350px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
-    text-align: center;
+    padding: 30px;
+    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-/* Avatar circle at the top */
-.avatar img {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    background: #233567;
-    padding: 10px;
+/* Boutons de navigation */
+.nav-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 30px;
 }
 
-/* Input field groups */
-.input-group {
-    margin: 20px 0;
-    text-align: left;
-}
-
-.input-group label {
-    font-size: 14px;
-    color: #fff;
-    margin-bottom: 5px;
-    display: block;
-}
-
-.input-group input {
-    width: 100%;
-    padding: 10px;
+.nav-btn {
+    padding: 10px 25px;
     border: none;
-    border-radius: 5px;
-    font-size: 14px;
-    color: #333;
-    background: #ffffff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-
-
-/* Login button styles */
-.login-button {
-    width: 100%;
-    padding: 10px;
-    margin-top: 10px;
-    background: #4a90e2;
-    border: none;
-    border-radius: 5px;
-    color: #fff;
+    border-radius: 50px;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
     font-size: 16px;
-    font-weight: bold;
     cursor: pointer;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
 }
 
-.login-button:hover {
-    background: #357ABD;
+.nav-btn.active {
+    background: #0d6efd; /* Couleur bleue pour le bouton actif */
+    box-shadow: 0 4px 15px rgba(13, 110, 253, 0.3);
+}
+
+/* Modification de .auth-form pour correspondre au style du background */
+.auth-form {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 30px;
+    border-radius: 15px;
+    color: white;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.auth-form h2 {
+    color: white; /* Couleur du titre */
+    margin-bottom: 25px;
+    text-align: center;
+    font-size: 24px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: white; /* Couleur du texte des labels */
+    font-size: 14px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid rgba(255, 255, 255, 0.2); /* Bordure semi-transparente */
+    border-radius: 10px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.1); /* Fond semi-transparent pour les inputs */
+    color: white; /* Couleur du texte des inputs */
+}
+
+.form-group input:focus {
+    border-color: #0d6efd;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.1);
+}
+
+.form-group small {
+    display: block;
+    margin-top: 5px;
+    color: rgba(255, 255, 255, 0.7); /* Couleur du texte des petits textes */
+    font-size: 12px;
+}
+
+/* Style pour le menu déroulant */
+.styled-select {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    font-size: 14px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%23ffffff" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    cursor: pointer;
+}
+
+.styled-select:hover {
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+.styled-select:focus {
+    border-color: #0d6efd;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.1);
+}
+
+.styled-select option {
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+}
+
+/* Bouton de soumission */
+.submit-btn {
+    width: 100%;
+    padding: 12px;
+    background: #0d6efd; /* Couleur bleue pour le bouton de soumission */
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+}
+
+.submit-btn:hover {
+    background: #0b5ed7;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(13, 110, 253, 0.3);
+}
+
+/* Utilitaires */
+.hidden {
+    display: none;
+}
+
+/* Animation des sections */
+.auth-form:not(.hidden) {
+    animation: fadeIn 0.3s ease forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .glass-card {
+        padding: 20px;
+    }
+
+    .auth-form {
+        padding: 20px;
+    }
+
+    .nav-btn {
+        padding: 8px 20px;
+        font-size: 14px;
+    }
 }

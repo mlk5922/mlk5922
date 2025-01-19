@@ -1,0 +1,34 @@
+<!-- core/templates/bonuses.html -->
+<h1>Gestion des primes</h1>
+<table>
+    <thead>
+        <tr>
+            <th>Employé</th>
+            <th>Type</th>
+            <th>Montant</th>
+            <th>Statut</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for bonus in bonuses %}
+        <tr>
+            <td>{{ bonus.employee }}</td>
+            <td>{{ bonus.get_type_display }}</td>
+            <td>{{ bonus.amount }}</td>
+            <td>
+                {% if bonus.is_approved %}
+                    Approuvé
+                {% else %}
+                    En attente
+                {% endif %}
+            </td>
+            <td>
+                <a href="{% url 'approve_bonus' bonus.id %}">Approuver</a>
+                <a href="{% url 'pay_bonus' bonus.id %}">Payer</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<a href="{% url 'add_bonus' %}">Ajouter une prime</a>

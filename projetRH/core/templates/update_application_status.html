@@ -1,16 +1,31 @@
 <!--core/templates/ update_application_status.html -->
-
-{% extends 'base.html' %}
+{% extends 'base.html' %}  <!-- Étend le template de base (si vous en avez un) -->
 
 {% block content %}
-<h1>Modifier le statut de la candidature de {{ application.candidate.username }}</h1>
-<form method="post">
-    {% csrf_token %}
-    <select name="status">
-        {% for status in application.STATUS_CHOICES %}
-        <option value="{{ status.0 }}" {% if status.0 == application.status %}selected{% endif %}>{{ status.1 }}</option>
-        {% endfor %}
-    </select>
-    <button type="submit" class="btn btn-primary">Mettre à jour</button>
-</form>
+<div class="container mt-5">
+    <h2>Mettre à jour le statut de la candidature</h2>
+    <p><strong>Candidat :</strong> {{ application.candidate.username }}</p>
+    <p><strong>Offre d'emploi :</strong> {{ application.job_posting.title }}</p>
+    <p><strong>Statut actuel :</strong> {{ application.get_status_display }}</p>
+
+    <form method="post" class="mt-4">
+        {% csrf_token %}  <!-- Token CSRF pour la sécurité -->
+        
+        <!-- Champ pour sélectionner le nouveau statut -->
+        <div class="form-group">
+            <label for="status">Nouveau statut :</label>
+            <select name="status" id="status" class="form-control">
+                <option value="RECEIVED" {% if application.status == 'RECEIVED' %}selected{% endif %}>Reçue</option>
+                <option value="PROCESSING" {% if application.status == 'PROCESSING' %}selected{% endif %}>En cours de traitement</option>
+                <option value="INTERVIEW" {% if application.status == 'INTERVIEW' %}selected{% endif %}>Entretien planifié</option>
+                <option value="REJECTED" {% if application.status == 'REJECTED' %}selected{% endif %}>Rejetée</option>
+                <option value="ACCEPTED" {% if application.status == 'ACCEPTED' %}selected{% endif %}>Acceptée</option>
+            </select>
+        </div>
+
+        <!-- Bouton de soumission -->
+        <button type="submit" class="btn btn-primary mt-3">Mettre à jour</button>
+        <a href="{% url 'view_applications' application.job_posting.id %}" class="btn btn-secondary mt-3">Annuler</a>
+    </form>
+</div>
 {% endblock %}

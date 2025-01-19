@@ -4,10 +4,12 @@
 {% block content %}
 <div class="container">
     <!-- Titre de la page -->
-    <h1>Gestion des recrutements</h1>
+    <h1 class="mt-4 mb-4">Gestion des recrutements</h1>
 
     <!-- Bouton pour poster une nouvelle offre -->
-    <a href="{% url 'post_job' %}" class="btn btn-primary mb-3">Poster une nouvelle offre</a>
+    <a href="{% url 'post_job' %}" class="btn btn-primary mb-3">
+        <i class="fas fa-plus"></i> Poster une nouvelle offre
+    </a>
 
     <!-- Tableau des offres d'emploi -->
     <table class="table table-striped">
@@ -31,7 +33,7 @@
                 <td>{{ job.get_contract_type_display }}</td>
 
                 <!-- Service associé -->
-                <td>{{ job.service }}</td>
+                <td>{{ job.service.description }}</td>
 
                 <!-- Statut de l'offre (active ou inactive) -->
                 <td>
@@ -45,12 +47,9 @@
                 <!-- Actions disponibles -->
                 <td>
                     <!-- Bouton pour voir les candidatures -->
-                    <a href="{% url 'view_applications' job.id %}" class="btn btn-info btn-sm">Voir les candidatures</a>
-
-                    <!-- Bouton pour postuler (visible uniquement si l'offre est active et non pourvue) -->
-                    {% if job.active and not job.is_filled %}
-                        <a href="{% url 'apply_job' job.id %}" class="btn btn-primary btn-sm">Postuler</a>
-                    {% endif %}
+                    <a href="{% url 'view_applications' job.id %}" class="btn btn-info btn-sm">
+                        <i class="fas fa-eye"></i> Voir les candidatures
+                    </a>
                 </td>
             </tr>
             {% endfor %}

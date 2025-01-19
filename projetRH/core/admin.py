@@ -24,12 +24,12 @@ class CustomPermissionAdmin(admin.ModelAdmin):
     list_filter = ('can_manage_employees', 'can_manage_contracts', 'can_manage_leaves', 'can_manage_salaries', 'can_manage_recruitment')
 
 # Employee Admin
-class EmployeeAdmin(admin.ModelAdmin):
-    list_display = ('code', 'nom', 'prenom', 'service', 'hire_date', 'gender', 'is_active')
-    search_fields = ('nom', 'prenom', 'code')
-    list_filter = ('service', 'gender', 'hire_date', 'is_active')
-    list_editable = ('is_active',)  # Ce champ existe maintenant dans le modèle
 
+class EmployeeAdmin(admin.ModelAdmin):
+    list_display = ('nom', 'prenom', 'code', 'user', 'gender')
+    list_filter = ('service', 'gender')
+    search_fields = ('nom', 'prenom', 'code', 'user__username')
+    raw_id_fields = ('user',)
 
 # Service Admin
 class ServiceAdmin(admin.ModelAdmin):
@@ -82,10 +82,9 @@ class SkillAdmin(admin.ModelAdmin):
 
 # EmployeeSkill Admin
 class EmployeeSkillAdmin(admin.ModelAdmin):
-    list_display = ('employee', 'skill', 'level', 'acquired_date', 'is_verified')
-    search_fields = ('employee__nom', 'employee__prenom', 'skill__name')
-    list_filter = ('level', 'acquired_date', 'is_verified')
-    list_editable = ('is_verified',)
+    list_display = ('employee', 'skill', 'level', 'acquisition_date', 'is_verified')
+    list_filter = ('employee', 'skill', 'acquisition_date', 'is_verified')
+    search_fields = ('employee__username', 'skill__name')
 
 # JobPosting Admin
 class JobPostingAdmin(admin.ModelAdmin):

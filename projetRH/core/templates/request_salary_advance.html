@@ -2,13 +2,66 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Demander une avance sur salaire</h1>
+<div class="container">
+    <h1 class="mt-4 mb-4">Demander une avance sur salaire</h1>
 
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">Envoyer la demande</button>
-</form>
+    <!-- Formulaire de demande d'avance sur salaire -->
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Formulaire de demande</h5>
 
-<a href="{% url 'manage_salaries' %}" class="btn btn-secondary">Retour</a>
+            <!-- Afficher les messages d'erreur ou de succès -->
+            {% if messages %}
+                <div class="alert alert-info">
+                    {% for message in messages %}
+                        {{ message }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <!-- Formulaire -->
+            <form method="post">
+                {% csrf_token %}
+
+                <!-- Afficher les erreurs du formulaire -->
+                {% if form.errors %}
+                    <div class="alert alert-danger">
+                        <strong>Erreur :</strong> Veuillez corriger les erreurs ci-dessous.
+                    </div>
+                {% endif %}
+
+                <!-- Afficher les champs du formulaire -->
+                <div class="form-group">
+                    <label for="{{ form.amount.id_for_label }}">Montant de l'avance</label>
+                    {{ form.amount }}
+                    {% if form.amount.errors %}
+                        <div class="text-danger">
+                            {{ form.amount.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.reason.id_for_label }}">Raison de l'avance</label>
+                    {{ form.reason }}
+                    {% if form.reason.errors %}
+                        <div class="text-danger">
+                            {{ form.reason.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Bouton de soumission -->
+                <button type="submit" class="btn btn-success">Soumettre la demande</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Lien pour revenir à la liste des avances -->
+    <div class="mt-4">
+        <a href="{% url 'manage_salary_advances' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Retour à la liste des avances
+        </a>
+    </div>
+</div>
 {% endblock %}
